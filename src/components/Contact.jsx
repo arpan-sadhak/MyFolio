@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, MapPin, Send } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 function GithubIcon(props) {
   return (
@@ -17,7 +18,9 @@ function LinkedinIcon(props) {
   );
 }
 
-export default function Contact({ contact, social }) {
+export default function Contact() {
+   const contact = useSelector(state => state.contact.contact)
+   const social = useSelector(state => state.contact.contact.social)
   const [status, setStatus] = useState('idle');
 
   const handleSubmit = (e) => {

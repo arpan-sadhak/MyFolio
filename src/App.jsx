@@ -9,6 +9,7 @@ export default function App() {
     <ThemeProvider>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/edit" element={<Edit />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>

@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Quote, ArrowLeft, ArrowRight, Star } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
-export default function Testimonials({ items }) {
+export default function Testimonials() {
+  const items = useSelector((state) => state.testimonial.testimonials);
+
   const [index, setIndex] = useState(0);
   const current = items[index];
 

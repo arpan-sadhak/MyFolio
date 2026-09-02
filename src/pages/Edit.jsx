@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Topbar from '../components/Topbar';
-import Hero from '../components/Hero';
-import TechStack from '../components/TechStack';
-import FeaturedProjects from '../components/FeaturedProjects';
-import AboutMe from '../components/AboutMe';
-import Skills from '../components/Skills';
-import Experience from '../components/Experience';
-import Blog from '../components/Blog';
-import Testimonials from '../components/Testimonials';
-import Contact from '../components/Contact';
-import Footer from '../components/Footer';
+import Sidebar from '../form/Sidebar';
+import Topbar from '../form/Topbar';
+import Hero from '../form/Hero';
+import TechStack from '../form/TechStack';
+import FeaturedProjects from '../form/FeaturedProjects';
+import AboutMe from '../form/AboutMe';
+import Skills from '../form/Skills';
+import Experience from '../form/Experience';
+import Blog from '../form/Blog';
+import Testimonials from '../form/Testimonials';
+import Contact from '../form/Contact';
+import Footer from '../form/Footer';
 import { useSelector } from 'react-redux';
 
 function PageSkeleton() {
@@ -25,8 +25,8 @@ function PageSkeleton() {
   );
 }
 
-export default function Home() {
-  // const { data, loading, error } = usePortfolioData();
+export default function Edit() {
+  // const { loading, error } = usePortfolioData();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const data = useSelector(state => state.hero)
@@ -57,11 +57,11 @@ export default function Home() {
           <TechStack />
           <Skills />
           <FeaturedProjects/>
-          <Experience/>
+          <Experience />
           <Blog />
-          <Testimonials/>
+          <Testimonials />
           <Contact />
-          <Footer />
+          <Footer/>
         </div>
       </main>
     </div>

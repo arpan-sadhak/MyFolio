@@ -1,7 +1,9 @@
 import { ArrowUpRight, TrendingUp } from 'lucide-react';
 import ProjectCard from './ProjectCard';
+import { useSelector } from 'react-redux';
 
-export default function FeaturedProjects({ projects, signature }) {
+export default function FeaturedProjects({ signature }) {
+  const projects = useSelector(state => state.projects.project)
   return (
     <section id="projects" className="mt-10 scroll-mt-24">
       <div className="flex items-end justify-between mb-5">

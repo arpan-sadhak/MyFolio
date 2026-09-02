@@ -1,6 +1,8 @@
 import { ArrowUpRight } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
-export default function Hero({ profile }) {
+export default function Hero() {
+  const profile = useSelector(state => state.hero);
   return (
     <section
       id="home"

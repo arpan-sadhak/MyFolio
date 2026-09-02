@@ -1,6 +1,8 @@
 import { TechBadge } from './icons/TechIcons';
+import { useSelector } from 'react-redux';
 
-export default function TechStack({ stack }) {
+export default function TechStack() {
+  const stack = useSelector(state => state.techStack.techStack)
   return (
     <section className="mt-10">
       <div className="rounded-3xl border border-paper-200 dark:border-white/5 bg-paper-50 dark:bg-ink-900/60 p-6">

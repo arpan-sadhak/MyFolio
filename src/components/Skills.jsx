@@ -1,4 +1,7 @@
-export default function Skills({ skills }) {
+import { useSelector } from 'react-redux';
+
+export default function Skills() {
+  const skills = useSelector(state => state.skills.skills)
   return (
     <section id="skills" className="mt-10 scroll-mt-24">
       <p className="font-mono text-xs tracking-[0.2em] text-ink-900/50 dark:text-paper-100/40 uppercase mb-5">

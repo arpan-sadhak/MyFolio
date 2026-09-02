@@ -20,7 +20,7 @@ const NAV_ITEMS = [
   { id: 'skills', label: 'Skills', icon: SlidersHorizontal },
   { id: 'projects', label: 'Projects', icon: FolderKanban },
   { id: 'experience', label: 'Experience', icon: Activity },
-  // { id: 'blog', label: 'Blog', icon: PenSquare },
+  { id: 'blog', label: 'Blog', icon: PenSquare },
   { id: 'contact', label: 'Contact', icon: Mail },
 ];
 

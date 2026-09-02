@@ -1,4 +1,7 @@
-export default function Experience({ items }) {
+import { useSelector } from 'react-redux';
+
+export default function Experience() {
+  const items = useSelector((state) => state.experience.experience);
   return (
     <section id="experience" className="mt-10 scroll-mt-24">
       <p className="font-mono text-xs tracking-[0.2em] text-ink-900/50 dark:text-paper-100/40 uppercase mb-5">
