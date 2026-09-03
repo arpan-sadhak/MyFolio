@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
-const useContactForm = () => {
-    const contact = useSelector(state => state.contact.contact)
+const useContactForm = ({contact}) => {
+    
     
 
   const [status, setStatus] = useState("idle");

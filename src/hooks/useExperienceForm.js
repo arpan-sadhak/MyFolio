@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-const useExperienceForm = () => {
-  const items = useSelector((state) => state.experience.experience);
+const useExperienceForm = ({items}) => {
 
   const [experienceItems, setExperienceItems] = useState(
     Array.isArray(items)

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-const useTestimonialsForm = () => {
-  const items = useSelector((state) => state.testimonial.testimonials);
+const useTestimonialsForm = ({items}) => {
+  
 
   const [testimonialItems, setTestimonialItems] = useState(
     Array.isArray(items)

@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 
-const useSkillsForm = () => {
-
-  const skills = useSelector(state => state.skills.skills)
+const useSkillsForm = ({skills}) => {
 
   const [skillItems, setSkillItems] = useState(
     Array.isArray(skills)

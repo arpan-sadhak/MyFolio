@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {update} from "../features/aboutMe/aboutMeSlice"
 
 
-const useAboutForm = () => {
-  const about = useSelector((state) => state.about);
+const useAboutForm = ({about}) => {
+  
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState(() => ({

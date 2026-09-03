@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-const useTechStackForm = () => {
-
-    const stack = useSelector(state => state.techStack.techStack)
-
-    const [techItems, setTechItems] = useState(
+const useTechStackForm = ({ stack }) => {
+  const [techItems, setTechItems] = useState(
     Array.isArray(stack)
       ? stack.map((tech) => ({
           id: tech.id ?? crypto.randomUUID(),
@@ -143,19 +140,19 @@ const useTechStackForm = () => {
     console.log("TECH STACK:", data);
   };
 
-    return {
-        handleSave,
-        handleDelete,
-        handleAdd,
-        finishCustom,
-        updateCustomImage,
-        updateCustomName,
-        createCustom,
-        selectDevicon,
-        customEditor,
-        openPicker,
-        techItems,
-    }
-}
+  return {
+    handleSave,
+    handleDelete,
+    handleAdd,
+    finishCustom,
+    updateCustomImage,
+    updateCustomName,
+    createCustom,
+    selectDevicon,
+    customEditor,
+    openPicker,
+    techItems,
+  };
+};
 
-export default useTechStackForm
+export default useTechStackForm;

@@ -16,10 +16,12 @@ export const aboutMeSlice = createSlice({
   initialState: INITIAL_STATE,
   reducers: {
     update: (state, action) => {
+      console.log(state.body);
       return {
         ...state,
         ...action.payload,
       };
+      
     },
   },
 });

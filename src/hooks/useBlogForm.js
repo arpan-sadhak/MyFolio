@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
-const useBlogForm = () => {
-    const posts = useSelector(state => state.blog.blog)
+const useBlogForm = ({posts}) => {
 
   const [blogPosts, setBlogPosts] = useState(
     Array.isArray(posts)

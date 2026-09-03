@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
-const useFeatureProject = () => {
-  const projects = useSelector((state) => state.projects.project);
-  const signature = useSelector((state) => state.hero.signature);
+const useFeatureProject = ({projects, signature }) => {
+
   
   
 

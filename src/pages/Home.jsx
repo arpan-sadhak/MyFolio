@@ -4,7 +4,7 @@ import Topbar from '../components/Topbar';
 import Hero from '../components/Hero';
 import TechStack from '../components/TechStack';
 import FeaturedProjects from '../components/FeaturedProjects';
-import AboutMe from '../components/AboutMe';
+import { AboutMe } from '../components/AboutMe';
 import Skills from '../components/Skills';
 import Experience from '../components/Experience';
 import Blog from '../components/Blog';
@@ -25,11 +25,25 @@ function PageSkeleton() {
   );
 }
 
-export default function Home() {
+export default function Home({editMode = false}) {
+
+  const about = useSelector((state) => state.about);
+  const posts = useSelector((state) => state.blog.blog);
+  const contact = useSelector((state) => state.contact.contact);
+  const social = useSelector((state) => state.contact.contact.social);
+  const experience = useSelector((state) => state.experience.experience);
+  const projects = useSelector(state => state.projects.project);
+  const hero = useSelector(state => state.hero);
+  const name = useSelector((state) => state.hero.name);
+  const skills = useSelector(state => state.skills.skills);
+  const stack = useSelector((state) => state.techStack.techStack);
+  const items = useSelector((state) => state.testimonial.testimonials);
+  
+
+
+
   // const { data, loading, error } = usePortfolioData();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const data = useSelector(state => state.hero)
 
   // if (loading || !data) return <PageSkeleton />;
 
@@ -44,24 +58,25 @@ export default function Home() {
   return (
     <div className="bg-white dark:bg-ink-950 min-h-screen transition-colors duration-300">
       <Sidebar
-        resumeUrl={data.resumeUrl}
+        resumeUrl={hero.resumeUrl}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
+        editMode
       />
       <Topbar onOpenMenu={() => setMobileOpen(true)} />
 
       <main className="lg:pl-[250px]">
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-10">
-          <Hero />
-          <AboutMe />
-          <TechStack />
-          <Skills />
-          <FeaturedProjects/>
-          <Experience/>
-          <Blog />
-          <Testimonials/>
-          <Contact />
-          <Footer />
+          <Hero profile={hero} editMode={editMode} />
+          <AboutMe about={about} editMode={editMode} />
+          <TechStack stack={stack} editMode={editMode} />
+          <Skills skills={skills} editMode={editMode} />
+          <FeaturedProjects projects={projects} signature={hero.signature} editMode={editMode} />
+          <Experience items={experience} editMode={editMode} />
+          <Blog posts={posts} editMode={editMode} />
+          <Testimonials items={items} editMode={editMode} />
+          <Contact contact={contact} social={social} editMode={editMode} />
+          <Footer name={name} editMode={editMode} />
         </div>
       </main>
     </div>

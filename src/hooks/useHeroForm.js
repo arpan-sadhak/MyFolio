@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { useState, useRef } from "react";
 
-const useHeroForm = () => {
-    const profile = useSelector(state => state.hero);
+const useHeroForm = ({profile}) => {
+    
 
   const [formData, setFormData] = useState(() => ({
     greeting: profile?.greeting || "",
