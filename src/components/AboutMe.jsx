@@ -1,16 +1,72 @@
-import {
-  Layers,
-  ArrowUpRight,
-} from "lucide-react";
+import { Layers, ArrowUpRight } from "lucide-react";
 
 import IconPicker from "./icons/IconPicker";
 import { Plus, Trash2 } from "lucide-react";
 import { ICONS } from "./icons/IconPicker";
 import useAboutForm from "../hooks/useAboutForm";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchAbout } from "../service/api";
+import { useSelector } from "react-redux";
+
+const AboutSkeleton = () => {
+  return (
+    <section
+      id="about"
+      className="mt-10 scroll-mt-24 rounded-3xl border border-paper-200 dark:border-white/5 bg-paper-50 dark:bg-ink-900/60 p-6 sm:p-8"
+    >
+      <div className="grid lg:grid-cols-[1fr_1.4fr] gap-8">
+        {/* Left side */}
+        <div>
+          {/* Heading */}
+          <div className="skeleton-shimmer h-3 w-32 rounded mb-4" />
+
+          {/* Body */}
+          <div className="space-y-2">
+            <div className="skeleton-shimmer h-3 w-full rounded" />
+            <div className="skeleton-shimmer h-3 w-[95%] rounded" />
+            <div className="skeleton-shimmer h-3 w-[85%] rounded" />
+            <div className="skeleton-shimmer h-3 w-[70%] rounded" />
+          </div>
+
+          {/* Link */}
+          <div className="skeleton-shimmer h-4 w-28 rounded mt-6" />
+        </div>
+
+        {/* Right side - Stats */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-2xl bg-white dark:bg-ink-900 border border-paper-200 dark:border-white/5 p-4 flex flex-col gap-2"
+            >
+              {/* Icon */}
+              <div className="skeleton-shimmer h-5 w-5 rounded" />
+
+              {/* Value */}
+              <div className="skeleton-shimmer h-6 w-16 rounded mt-1" />
+
+              {/* Label */}
+              <div className="skeleton-shimmer h-3 w-20 rounded" />
+              <div className="skeleton-shimmer h-3 w-14 rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export function AboutMe({ editMode = false }) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAbout());
+  }, [dispatch]);
+
+  const about = useSelector((state) => state?.about);
 
 
-export function AboutMe({ about, editMode = false }) {
-  if (editMode) {    
+  if (editMode) {
     const {
       formData,
       openIconPicker,
@@ -20,7 +76,12 @@ export function AboutMe({ about, editMode = false }) {
       handleDeleteStat,
       handleAddStat,
       handleSubmit,
-    } = useAboutForm({about:about});
+    } = useAboutForm({ about: about?.data });
+    
+
+    if (about?.loading) {
+      return <AboutSkeleton />;
+    }
 
     return (
       <section
@@ -177,10 +238,10 @@ export function AboutMe({ about, editMode = false }) {
         <div className="grid lg:grid-cols-[1fr_1.4fr] gap-8">
           <div>
             <p className="font-mono text-xs tracking-[0.2em] text-brand-600 dark:text-brand-400 uppercase mb-3">
-              {about.heading}
+              {about?.data?.heading}
             </p>
             <p className="text-ink-900/70 dark:text-paper-100/60 leading-relaxed">
-              {about.body}
+              {about?.data?.body}
             </p>
             <a
               href="#contact"
@@ -191,11 +252,11 @@ export function AboutMe({ about, editMode = false }) {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {about?.stats.map((stat) => {
-              const Icon = ICONS[stat.icon] || Layers;
+            {about?.data?.stats?.map((stat) => {
+              const Icon = ICONS[stat?.icon] || Layers;
               return (
                 <div
-                  key={stat.label}
+                  key={stat?.label}
                   className="rounded-2xl bg-white dark:bg-ink-900 border border-paper-200 dark:border-white/5 p-4 flex flex-col gap-2"
                 >
                   <Icon
@@ -203,10 +264,10 @@ export function AboutMe({ about, editMode = false }) {
                     size={20}
                   />
                   <p className="font-display font-extrabold text-xl text-ink-950 dark:text-white">
-                    {stat.value}
+                    {stat?.value}
                   </p>
                   <p className="text-xs text-ink-900/50 dark:text-paper-100/40 leading-tight">
-                    {stat.label}
+                    {stat?.label}
                   </p>
                 </div>
               );

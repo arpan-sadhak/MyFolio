@@ -1,24 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { extraReducers } from "../../utils/extraReducers"
+import { fetchSkills } from "../../service/api"
 
 const INITIAL_STATE = {
-    skills: [
-    { name: 'React', level: 90 },
-    { name: 'JavaScript / TypeScript', level: 88 },
-    { name: 'Node.js & Express', level: 80 },
-    { name: 'MongoDB / SQL', level: 75 },
-    { name: 'UI / UX Design', level: 50 },
-    { name: 'Tailwind CSS', level: 80 },
-  ]
-
+  data : null,
+  loading : false,
+  error : null,
 }
 
 const skillsSlice = createSlice({
     name : 'skills',
     initialState : INITIAL_STATE,
     reducers : {
-        update : () => {}
-    }
+    },
+    extraReducers : (builder) => extraReducers(fetchSkills)(builder)
 })
 
-export const {update} = skillsSlice.actions
+export const {setSkills} = skillsSlice.actions
 export default skillsSlice.reducer

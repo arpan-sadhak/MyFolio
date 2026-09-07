@@ -1,27 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchContact } from "../../service/api";
+import { extraReducers } from "../../utils/extraReducers";
 
 const INITIAL_STATE = {
-  contact: {
-    heading: "Let's build something amazing together!",
-    email: "hello@example.com",
-    location: "Kolkata, India",
-    social: [
-      { platform: "github", url: "https://github.com/arpan-sadhak" },
-      {
-        platform: "linkedin",
-        url: "https://www.linkedin.com/in/arpan-sadhak-63bb54308",
-      },
-    ],
-  },
+  data : null,
+  loading : false,
+  error : null,
 };
 
 const contactSlice = createSlice({
   name: "contact",
   initialState: INITIAL_STATE,
   reducers: {
-    update: () => {},
   },
+  extraReducers : (builder)=> extraReducers(fetchContact)(builder)
 });
 
-export const { update } = contactSlice.actions;
+export const { setContact } = contactSlice.actions;
 export default contactSlice.reducer;

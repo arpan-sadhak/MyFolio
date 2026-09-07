@@ -1,8 +1,64 @@
-import ProjectCard from "./ProjectCard";
+import ProjectCard, { ProjectCardSkeleton } from "./ProjectCard";
 import { ArrowUpRight, TrendingUp, Plus, Trash2 } from "lucide-react";
 import useFeatureProject from "../hooks/useFeaturedProject";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProject } from "../service/api";
+import { useEffect } from "react";
 
-export default function FeaturedProjects({ projects, signature, editMode }) {
+
+const ProjectsSkeleton = () => {
+  return (
+    <section id="projects" className="mt-10 scroll-mt-24">
+      {/* Header */}
+      <div className="flex items-end justify-between mb-5">
+        <div className="skeleton-shimmer h-3 w-28 rounded" />
+
+        <div className="skeleton-shimmer h-4 w-32 rounded" />
+      </div>
+
+      <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {/* Project skeletons */}
+        {Array.from({ length: 3 }).map((_, index) => (
+          <ProjectCardSkeleton key={index} />
+        ))}
+
+        {/* Signature / CTA skeleton */}
+        <div className="rounded-2xl bg-brand-600 p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden">
+          {/* Icon */}
+          <div className="absolute right-4 top-4 skeleton-shimmer w-20 h-20 rounded-full opacity-30" />
+
+          {/* Heading */}
+          <div className="space-y-2">
+            <div className="skeleton-shimmer h-5 w-40 rounded" />
+            <div className="skeleton-shimmer h-5 w-32 rounded" />
+          </div>
+
+          {/* Bottom content */}
+          <div>
+            <div className="skeleton-shimmer h-3 w-52 rounded mb-4" />
+            <div className="skeleton-shimmer h-7 w-32 rounded" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+export default function FeaturedProjects({ editMode }) {
+
+  const projects = useSelector(state => state?.projects);
+  const signature = useSelector((state) => state?.hero?.data?.name);
+  
+  
+  
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchProject());
+    
+  }, [dispatch]);
+  
+
   const {
     projectItems,
     signatureValue,
@@ -11,7 +67,11 @@ export default function FeaturedProjects({ projects, signature, editMode }) {
     handleDeleteProject,
     handleAddProject,
     handleSave,
-  } = useFeatureProject({projects:projects, signature:signature,});
+  } = useFeatureProject({projects:projects?.data, signature:signature,});
+
+  if (projects?.loading){
+    return (<ProjectsSkeleton/>)
+  }
 
   return editMode ? (
     <section id="projects" className="mt-10 scroll-mt-24">
@@ -152,8 +212,8 @@ export default function FeaturedProjects({ projects, signature, editMode }) {
       </div>
 
       <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+        {projects?.data?.map((project) => (
+          <ProjectCard key={project._id} project={project} />
         ))}
 
         <div className="rounded-2xl bg-brand-600 text-white p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden">

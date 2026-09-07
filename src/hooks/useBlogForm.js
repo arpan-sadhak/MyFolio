@@ -59,11 +59,6 @@ const useBlogForm = ({posts}) => {
 
   const handleSave = () => {
 
-    console.log(
-      "BLOG DATA:",
-      blogPosts
-    );
-
   };
 
     return {

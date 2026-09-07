@@ -2,9 +2,81 @@
 import { ArrowUpRight, Camera, ZoomIn, ZoomOut } from "lucide-react";
 
 import useHeroForm from "../hooks/useHeroForm";
+import { useDispatch } from "react-redux";
+import { fetchHero } from "../service/api";
+import { useEffect } from "react";
+import { useSelector } from 'react-redux';
 
 
-export default function Hero({profile, editMode= false}) {
+const HomeSkeleton = () => {
+  return (
+    <section
+      id="home"
+      className="relative pt-10 lg:pt-4 pb-4 scroll-mt-20 overflow-hidden"
+    >
+      {/* Ambient grid */}
+      <div className="pointer-events-none absolute inset-0 -z-10 hidden dark:block bg-grid bg-[size:36px_36px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
+
+      {/* Hire Me */}
+      <div className="hidden lg:flex justify-end mb-4">
+        <div className="skeleton-shimmer h-10 w-28 rounded-full" />
+      </div>
+
+      <div className="grid lg:grid-cols-[0.8fr_auto] gap-10 items-center">
+        {/* Left content */}
+        <div className="lg:pl-20">
+          {/* Greeting */}
+          <div className="skeleton-shimmer h-3 w-28 rounded mb-4" />
+
+          {/* Name */}
+          <div className="space-y-2">
+            <div className="skeleton-shimmer h-14 sm:h-16 lg:h-[67px] w-48 sm:w-56 lg:w-64 rounded" />
+            <div className="skeleton-shimmer h-14 sm:h-16 lg:h-[67px] w-40 sm:w-48 lg:w-56 rounded" />
+          </div>
+
+          {/* Role */}
+          <div className="skeleton-shimmer h-5 w-64 rounded mt-6" />
+
+          {/* Tagline */}
+          <div className="space-y-2 mt-3 max-w-md">
+            <div className="skeleton-shimmer h-4 w-full rounded" />
+            <div className="skeleton-shimmer h-4 w-[85%] rounded" />
+          </div>
+
+          {/* Let's Connect */}
+          <div className="skeleton-shimmer h-12 w-36 rounded-full mt-7" />
+        </div>
+
+        {/* Right / Avatar */}
+        <div className="relative mx-auto lg:mx-0">
+          {/* Glow */}
+          <div className="absolute inset-0 -z-10 rounded-full bg-brand-500/10 blur-3xl scale-110" />
+
+          {/* Avatar */}
+          <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-full border-4 border-brand-500/10 p-2">
+            <div className="skeleton-shimmer w-full h-full rounded-full" />
+          </div>
+
+          {/* Years badge */}
+          <div className="absolute -top-4 -right-4 sm:right-48 skeleton-shimmer rounded-2xl px-4 py-3 w-24 h-16" />
+
+          {/* Availability */}
+          <div className="absolute -bottom-0 left-[26%] -translate-x-1/2 skeleton-shimmer rounded-full w-32 h-8" />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+export default function Hero({ editMode= false}) {
+  const profile = useSelector(state => state?.hero);
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchHero());
+  }, [dispatch]);
   
   const {
     formData,
@@ -21,6 +93,10 @@ export default function Hero({profile, editMode= false}) {
     handleResetImage,
     handleSubmit,
   } = useHeroForm({profile:profile});
+
+  if (profile?.loading){
+    return (<HomeSkeleton/>)
+  }
   
   return editMode ? (
     <section
@@ -317,21 +393,21 @@ export default function Hero({profile, editMode= false}) {
       <div className="grid lg:grid-cols-[0.8fr_auto] gap-10 items-center">
         <div className="lg:pl-20">
           <p className="font-mono text-xs tracking-[0.25em] text-brand-600 dark:text-brand-400 uppercase mb-3">
-            {profile?.greeting}
+            {profile?.data?.greeting}
           </p>
           <h1 className="font-display font-extrabold leading-[0.95] text-5xl sm:text-6xl lg:text-7xl text-ink-950 dark:text-white">
-            {profile?.firstName}
+            {profile?.data?.firstName}
             <br />
             <span className="text-brand-600 dark:text-brand-400">
-              {profile?.lastName}
+              {profile?.data?.lastName}
             </span>
           </h1>
 
           <p className="mt-5 text-lg font-medium text-ink-900/80 dark:text-paper-100/90 max-w-lg">
-            {profile?.role}
+            {profile?.data?.role}
           </p>
           <p className="mt-2 text-ink-900/50 dark:text-paper-100/50 max-w-md">
-            {profile?.tagline}
+            {profile?.data?.tagline}
           </p>
 
           <a
@@ -346,10 +422,10 @@ export default function Hero({profile, editMode= false}) {
           <div className="absolute inset-0 -z-10 rounded-full bg-brand-500/20 blur-3xl scale-110 animate-pulse-slow" />
           <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-full border-4 border-brand-500/30 p-2 animate-float">
             <div className="w-full h-full rounded-full overflow-hidden bg-ink-800 flex items-center justify-center">
-              {profile.avatar ? (
+              {profile?.data?.avatar?.avatar ? (
                 <img
-                  src={profile.avatar}
-                  alt={profile.name}
+                  src={profile.data.avatar.avatar}
+                  alt={profile.data.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
@@ -357,23 +433,23 @@ export default function Hero({profile, editMode= false}) {
                 />
               ) : null}
               <span className="font-display text-6xl font-bold text-brand-500/40 absolute">
-                {profile.firstName?.[0]}
+                {profile?.data?.firstName?.[0]}
               </span>
             </div>
           </div>
 
           <div className="absolute -top-4 -right-4 sm:right-48 bg-brand-600 text-white rounded-2xl px-4 py-3 text-center shadow-glow">
             <p className="font-display font-extrabold text-lg leading-none">
-              {profile.yearsLabel}
+              {profile?.data?.yearsLabel}
             </p>
             <p className="text-[10px] leading-tight mt-1 opacity-90 max-w-[70px]">
-              {profile.yearsSub}
+              {profile?.data?.yearsSub}
             </p>
           </div>
 
           <div className="absolute -bottom-0 left-[26%] -translate-x-1/2 flex items-center gap-1.5 bg-white dark:bg-ink-900 border border-paper-200 dark:border-white/10 rounded-full px-3 py-1.5 text-xs font-medium text-ink-900 dark:text-paper-100 whitespace-nowrap shadow-sm">
             <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse-slow" />
-            {profile.availability}
+            {profile?.data?.availability}
           </div>
         </div>
       </div>

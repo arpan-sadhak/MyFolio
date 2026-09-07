@@ -2,15 +2,72 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import useExperienceForm from "../hooks/useExperienceForm";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchExperience } from "../service/api";
+import { useEffect } from "react";
 
-export default function Experience({items, editMode = false}) {
+const ExperienceSkeleton = ({ count = 3 }) => {
+  return (
+    <section id="experience" className="mt-10 scroll-mt-24">
+      {/* Section title */}
+      <div className="skeleton-shimmer h-3 w-24 rounded mb-5" />
+
+      <div className="space-y-4">
+        {Array.from({ length: count }).map((_, i) => (
+          <div
+            key={i}
+            className="relative pl-8 pb-4 border-l-2 border-paper-200 dark:border-white/10 last:border-transparent"
+          >
+            {/* Timeline dot */}
+            <span className="absolute -left-[7px] top-14 w-3 h-3 rounded-full skeleton-shimmer" />
+
+            <div className="rounded-2xl border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 p-5">
+              {/* Role + Period */}
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <div className="skeleton-shimmer h-5 w-40 rounded" />
+
+                <div className="skeleton-shimmer h-3 w-24 rounded" />
+              </div>
+
+              {/* Organization */}
+              <div className="skeleton-shimmer h-3 w-32 rounded mb-4" />
+
+              {/* Description */}
+              <div className="space-y-2">
+                <div className="skeleton-shimmer h-3 w-full rounded" />
+                <div className="skeleton-shimmer h-3 w-[90%] rounded" />
+                <div className="skeleton-shimmer h-3 w-[75%] rounded" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+
+export default function Experience({ editMode = false}) {
+  const experience = useSelector((state) => state?.experience);
+  
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchExperience());
+    
+  }, [dispatch]);
+
    const {
     experienceItems,
     handleChange,
     handleDelete,
     handleAdd,
     handleSave,
-  } = useExperienceForm({items:items});
+  } = useExperienceForm({items:experience?.data});
+
+  if (experience?.loading) {
+    return (<ExperienceSkeleton/>)
+  }
 
   return editMode ? (
     <section id="experience" className="mt-10 scroll-mt-24">
@@ -169,9 +226,9 @@ export default function Experience({items, editMode = false}) {
         Experience
       </p>
       <div className="space-y-4">
-        {items.map((item, i) => (
+        {experience?.data?.map((item, i) => (
           <div
-            key={item.id}
+            key={item._id}
             className="relative pl-8 pb-4 border-l-2 border-paper-200 dark:border-white/10 last:border-transparent"
           >
             <span className="absolute -left-[7px] top-14 w-3 h-3 rounded-full bg-brand-500" />

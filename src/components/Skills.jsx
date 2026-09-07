@@ -1,9 +1,45 @@
 import { Plus, Trash2 } from "lucide-react";
 import useSkillsForm from "../hooks/useSkillsForm";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSkills } from "../service/api";
+import { useEffect } from "react";
 
-export default function Skills({ skills, editMode = false }) {
+const SkillsSkeleton = ({ count = 6 }) => {
+  return (
+    <div className="grid sm:grid-cols-2 gap-x-8 gap-y-5">
+      {" "}
+      {Array.from({ length: count }).map((_, index) => (
+        <div key={index}>
+          {" "}
+          <div className="flex items-center justify-between mb-1.5">
+            {" "}
+            <div className="skeleton-shimmer h-4 w-24 rounded" />{" "}
+            <div className="skeleton-shimmer h-3 w-8 rounded" />{" "}
+          </div>{" "}
+          <div className="h-2 rounded-full bg-paper-100 dark:bg-white/5 overflow-hidden">
+            {" "}
+            <div className="skeleton-shimmer h-full w-full rounded-full" />{" "}
+          </div>{" "}
+        </div>
+      ))}{" "}
+    </div>
+  );
+};
+
+export default function Skills({ editMode = false }) {
+  const skills = useSelector((state) => state?.skills);
+  
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchSkills());
+  }, [dispatch]);
+
   const { skillItems, handleChange, handleAdd, handleDelete, handleSave } =
-    useSkillsForm({ skills: skills });
+    useSkillsForm({ skills: skills?.data });
+
+  if (skills?.loading) {
+    return <SkillsSkeleton />;
+  }
 
   return editMode ? (
     <section id="skills" className="mt-10 scroll-mt-24">
@@ -135,7 +171,7 @@ export default function Skills({ skills, editMode = false }) {
         Skills
       </p>
       <div className="grid sm:grid-cols-2 gap-x-8 gap-y-5">
-        {skills.map((skill) => (
+        {skills?.data?.map((skill) => (
           <div key={skill.name}>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-sm font-medium text-ink-950 dark:text-white">

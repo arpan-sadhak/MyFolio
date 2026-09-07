@@ -79,6 +79,8 @@ const useContactForm = ({contact}) => {
     e.preventDefault();
 
     setStatus("sent");
+    console.log(contactData);
+    
 
     setTimeout(() => {
       setStatus("idle");

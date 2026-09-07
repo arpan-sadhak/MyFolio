@@ -1,6 +1,18 @@
 
 import { Save } from "lucide-react";
 import useFooterForm from "../hooks/useFooterForm";
+import { useSelector } from 'react-redux';
+
+
+const FooterSkeleton = () => {
+  return (
+    <footer className="pb-8 pt-2 flex justify-center">
+      <div className="skeleton-shimmer h-3 w-64 rounded" />
+    </footer>
+  );
+};
+
+
 
 export default function Footer({name, editMode = false}) {
   
@@ -10,6 +22,10 @@ export default function Footer({name, editMode = false}) {
     handleChange,
     footerData,
   } = useFooterForm({name:name})
+
+  if(true){
+    return (<FooterSkeleton/>)
+  }
 
   return editMode ? (
     <footer className="pb-8 pt-2 text-center text-xs text-ink-900/40 dark:text-paper-100/30">

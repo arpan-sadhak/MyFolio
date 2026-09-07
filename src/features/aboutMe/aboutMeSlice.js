@@ -1,31 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchAbout } from "../../service/api";
+import { extraReducers } from "../../utils/extraReducers";
 
 const INITIAL_STATE = {
-  heading: "About Me",
-  body: "I'm a passionate developer who loves solving problems and building products that make an impact.",
-  stats: [
-    { label: "Years of Learning", value: "2+", icon: "clock" },
-    { label: "Projects Completed", value: "20+", icon: "layers" },
-    { label: "Happy Clients", value: "15+", icon: "briefcase" },
-    { label: "Client Satisfaction", value: "100%", icon: "shield" },
-  ],
+  data : null,
+  loading : false,
+  error : null,  
 };
 
 export const aboutMeSlice = createSlice({
   name: "about",
   initialState: INITIAL_STATE,
   reducers: {
-    update: (state, action) => {
-      console.log(state.body);
-      return {
-        ...state,
-        ...action.payload,
-      };
-      
-    },
+    
   },
+  extraReducers : (builder) => extraReducers(fetchAbout)(builder)
 });
 
-export const { update } = aboutMeSlice.actions;
+export const { setAbout } = aboutMeSlice.actions;
 
 export default aboutMeSlice.reducer;

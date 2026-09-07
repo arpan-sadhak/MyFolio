@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useContactForm from "../hooks/useContactForm";
 import {
   Mail,
@@ -10,7 +10,8 @@ import {
   Search,
   Globe,
 } from "lucide-react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchContact } from "../service/api";
 
 function GithubIcon({ size = 16 }) {
   return (
@@ -100,7 +101,6 @@ function XIcon({ size = 16 }) {
   );
 }
 
-
 function DiscordIcon({ size = 16 }) {
   return (
     <svg
@@ -154,7 +154,7 @@ const SOCIAL_OPTIONS = [
     value: "discord",
     label: "Discord",
   },
-]
+];
 
 function SocialPicker({ value, onChange, onClose }) {
   const [search, setSearch] = useState("");
@@ -234,7 +234,69 @@ function SocialPicker({ value, onChange, onClose }) {
   );
 }
 
-export default function Contact({contact, social, editMode = false}) {
+const ContactSkeleton = () => {
+  return (
+    <section id="contact" className="mt-10 mb-16 scroll-mt-24">
+      {/* Section title */}
+      <div className="skeleton-shimmer h-3 w-20 rounded mb-5" />
+
+      <div className="grid lg:grid-cols-[1fr_1.3fr] gap-6">
+        {/* Contact information skeleton */}
+        <div className="rounded-3xl bg-brand-600 p-6 sm:p-8 flex flex-col justify-between min-h-[300px]">
+          <div>
+            {/* Heading */}
+            <div className="space-y-2">
+              <div className="skeleton-shimmer h-7 w-[85%] rounded" />
+              <div className="skeleton-shimmer h-7 w-[60%] rounded" />
+            </div>
+
+            {/* Email + Location */}
+            <div className="space-y-4 mt-7">
+              <div className="flex items-center gap-3">
+                <div className="skeleton-shimmer h-4 w-4 rounded-full" />
+                <div className="skeleton-shimmer h-3 w-40 rounded" />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="skeleton-shimmer h-4 w-4 rounded-full" />
+                <div className="skeleton-shimmer h-3 w-32 rounded" />
+              </div>
+            </div>
+          </div>
+
+          {/* Social icons */}
+          <div className="flex items-center gap-3 mt-8">
+            <div className="skeleton-shimmer w-9 h-9 rounded-full" />
+            <div className="skeleton-shimmer w-9 h-9 rounded-full" />
+          </div>
+        </div>
+
+        {/* Keep form visible because it is interactive */}
+        <form className="rounded-3xl border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 p-6 sm:p-8 space-y-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="skeleton-shimmer w-full h-[46px] rounded-xl" />
+            <div className="skeleton-shimmer w-full h-[46px] rounded-xl" />
+          </div>
+
+          <div className="skeleton-shimmer w-full h-[46px] rounded-xl" />
+
+          <div className="skeleton-shimmer w-full h-[116px] rounded-xl" />
+
+          <div className="skeleton-shimmer w-full h-[50px] rounded-xl" />
+        </form>
+      </div>
+    </section>
+  );
+};
+
+export default function Contact({ editMode = false }) {
+  const contact = useSelector((state) => state?.contact?.data);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchContact());
+  }, [dispatch]);
+
   const {
     handleSubmit,
     handleSave,
@@ -246,7 +308,11 @@ export default function Contact({contact, social, editMode = false}) {
     openPicker,
     contactData,
     status,
-  } = useContactForm({contact:contact,});
+  } = useContactForm({ contact: contact });
+
+  if (contact?.loading) {
+    return <ContactSkeleton />;
+  }
 
   return editMode ? (
     <section id="contact" className="mt-10 mb-16 scroll-mt-24">
@@ -465,23 +531,23 @@ export default function Contact({contact, social, editMode = false}) {
         <div className="rounded-3xl bg-brand-600 text-white p-6 sm:p-8 flex flex-col justify-between">
           <div>
             <h3 className="font-display font-extrabold text-2xl leading-tight mb-3">
-              {contact.heading}
+              {contact?.heading}
             </h3>
             <div className="space-y-3 mt-6">
               <a
-                href={`mailto:${contact.email}`}
+                href={`mailto:${contact?.email}`}
                 className="flex items-center gap-3 text-sm"
               >
-                <Mail size={16} /> {contact.email}
+                <Mail size={16} /> {contact?.email}
               </a>
               <div className="flex items-center gap-3 text-sm">
-                <MapPin size={16} /> {contact.location}
+                <MapPin size={16} /> {contact?.location}
               </div>
             </div>
           </div>
           <div className="flex items-center gap-3 mt-8">
-            <a
-              href={social?.github}
+            {/* <a
+              href={contact?.social?.github}
               target="_blank"
               rel="noreferrer"
               className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center hover:bg-white/25 transition-colors"
@@ -490,14 +556,31 @@ export default function Contact({contact, social, editMode = false}) {
               <GithubIcon />
             </a>
             <a
-              href={social?.linkedin}
+              href={contact?.social?.linkedin}
               target="_blank"
               rel="noreferrer"
               className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center hover:bg-white/25 transition-colors"
               aria-label="LinkedIn"
             >
               <LinkedinIcon />
-            </a>
+            </a> */}
+            {contact?.social?.map((item, index) => {
+              const Icon = SOCIAL_ICONS[item.platform] || Globe;
+
+              return (
+                <div key={index} className="relative flex items-center gap-3">
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center hover:bg-white/25 transition-colors"
+                    aria-label={item.platform}
+                  >
+                    <Icon size={16} />
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </div>
 

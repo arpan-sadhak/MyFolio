@@ -1,24 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { extraReducers } from "../../utils/extraReducers"
+import { fetchTechStack } from "../../service/api"
 
 const INITIAL_STATE = {
-    techStack: [
-    { name: 'JavaScript', icon: 'js' },
-    { name: 'React', icon: 'react' },
-    { name: 'Node.js', icon: 'node' },
-    { name: 'MongoDB', icon: 'leaf' },
-    { name: 'Tailwind CSS', icon: 'wind' },
-    { name: 'Vite', icon: 'bolt' },
-  ],
-
+  data : null,
+  loading : false,
+  error : null,
 }
 
 const techStackSlice = createSlice({
     name : 'techStack',
     initialState : INITIAL_STATE,
     reducers : {
-        update : () => {}
+      
+    },
+    extraReducers : (builder) => extraReducers(fetchTechStack)(builder)
     }
-})
+)
 
-export const {update} = techStackSlice.actions
+export const {setTechStack} = techStackSlice.actions
 export default techStackSlice.reducer 

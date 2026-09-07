@@ -1,50 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { extraReducers } from "../../utils/extraReducers";
+import { fetchProject } from "../../service/api";
 
 const INITIAL_STATE = {
-  project: [
-    {
-      id: "eduportal",
-      title: "EduPortal",
-      description:
-        "A complete school management system with role-based access, attendance, and analytics.",
-      tags: ["MERN Stack", "Tailwind CSS"],
-      image: "/projects/eduportal.jpg",
-      link: "#",
-    },
-    {
-      id: "devconnect",
-      title: "DevConnect",
-      description:
-        "A developer networking platform to connect, collaborate and grow together.",
-      tags: ["Next.js", "MongoDB"],
-      image: "/projects/devconnect.jpg",
-      link: "#",
-    },
-    {
-      id: "taskflow",
-      title: "TaskFlow",
-      description:
-        "A smart task management app to boost productivity and team collaboration.",
-      tags: ["React", "Node.js"],
-      image: "/projects/taskflow.jpg",
-      link: "#",
-    },
-  ],
+  data : null,
+  loading : true,
+  error : null,
 };
 
 export const projectCardSlice = createSlice({
   name: "projects",
   initialState: INITIAL_STATE,
   reducers: {
-    update: (state, action) => {
-      return {
-        ...state,
-        ...action.payload,
-      };
-    },
   },
+  extraReducers : (builder)=> extraReducers(fetchProject)(builder)
 });
 
-export const { update } = projectCardSlice.actions;
+export const { setFeaturedProject } = projectCardSlice.actions;
 
 export default projectCardSlice.reducer;

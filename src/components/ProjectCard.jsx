@@ -5,23 +5,66 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useSelector } from 'react-redux';
+
+
+
+export const ProjectCardSkeleton = () => {
+  return (
+    <div className="rounded-2xl overflow-hidden border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 flex flex-col">
+      {/* Image */}
+      <div className="aspect-[4/3] relative overflow-hidden">
+        <div className="skeleton-shimmer w-full h-full" />
+      </div>
+
+      {/* Content */}
+      <div className="p-5 flex flex-col flex-1">
+        {/* Title */}
+        <div className="skeleton-shimmer h-5 w-3/5 rounded" />
+
+        {/* Description */}
+        <div className="mt-3 space-y-2 flex-1">
+          <div className="skeleton-shimmer h-3 w-full rounded" />
+          <div className="skeleton-shimmer h-3 w-[90%] rounded" />
+          <div className="skeleton-shimmer h-3 w-[70%] rounded" />
+        </div>
+
+        {/* Tags + Button */}
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex gap-1.5">
+            <div className="skeleton-shimmer h-6 w-14 rounded-full" />
+            <div className="skeleton-shimmer h-6 w-16 rounded-full" />
+            <div className="skeleton-shimmer h-6 w-12 rounded-full" />
+          </div>
+
+          {/* Action button */}
+          <div className="skeleton-shimmer w-8 h-8 shrink-0 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 export default function ProjectCard({
+
   project,
   onChange,
   onDelete,
   editMode = false }) {
 
     const safeProject = {
-    id: project?.id ?? "",
+    id: project?._id ?? "",
     title: project?.title ?? "",
     description: project?.description ?? "",
     image: project?.image ?? "",
-    link: project?.link ?? "",
+    githunUrl: project?.githunUrl ?? "",
+    liveUrl: project?.liveUrl ?? "",
     tags: Array.isArray(project?.tags)
       ? project.tags
       : [],
   };
+  
 
 
   const [tagInput, setTagInput] =
@@ -72,81 +115,6 @@ export default function ProjectCard({
       handleAddTag();
     }
   };
-
-  // if (!editable) {
-  //   return (
-  //     <div className="rounded-2xl overflow-hidden border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 flex flex-col group">
-
-  //       {/* IMAGE */}
-
-  //       <div className="aspect-[4/3] bg-gradient-to-br from-brand-500/20 to-ink-800 relative overflow-hidden">
-
-  //         {safeProject.image ? (
-  //           <img
-  //             src={safeProject.image}
-  //             alt={safeProject.title}
-  //             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-  //             onError={(e) => {
-  //               e.currentTarget.style.display =
-  //                 "none";
-  //             }}
-  //           />
-  //         ) : null}
-
-  //       </div>
-
-  //       {/* CONTENT */}
-
-  //       <div className="p-5 flex flex-col flex-1">
-
-  //         <h3 className="font-display font-bold text-ink-950 dark:text-white">
-  //           {safeProject.title}
-  //         </h3>
-
-  //         <p className="mt-2 text-sm text-ink-900/50 dark:text-paper-100/45 flex-1">
-  //           {safeProject.description}
-  //         </p>
-
-  //         {/* BOTTOM */}
-
-  //         <div className="mt-4 flex items-center justify-between gap-3">
-
-  //           {/* TAGS */}
-
-  //           <div className="flex flex-wrap gap-1.5">
-
-  //             {safeProject.tags.map(
-  //               (tag) => (
-  //                 <span
-  //                   key={tag}
-  //                   className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-paper-100 dark:bg-white/5 text-ink-900/60 dark:text-paper-100/60"
-  //                 >
-  //                   {tag}
-  //                 </span>
-  //               )
-  //             )}
-
-  //           </div>
-
-  //           {/* LINK */}
-
-  //           {safeProject.link && (
-  //             <a
-  //               href={safeProject.link}
-  //               target="_blank"
-  //               rel="noreferrer"
-  //               className="w-8 h-8 shrink-0 rounded-full flex items-center justify-center bg-brand-600 text-white hover:bg-brand-700 transition-colors"
-  //               aria-label={`View ${safeProject.title}`}
-  //             >
-  //               <ArrowUpRight size={15} />
-  //             </a>
-  //           )}
-
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   return editMode ? (
     <div className="rounded-2xl overflow-hidden border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 flex flex-col group">

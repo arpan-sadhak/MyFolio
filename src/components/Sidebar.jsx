@@ -14,6 +14,7 @@ import {
 import { useActiveSection } from "../hooks/useActiveSection";
 import { useTheme } from "../context/ThemeContext";
 import { useState } from "react";
+import { useSelector } from 'react-redux';
 
 const NAV_ITEMS = [
   { id: "home", label: "Home", icon: Home },
@@ -26,14 +27,24 @@ const NAV_ITEMS = [
 ];
 
 
+function isValidUrl(value) {
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 
 export default function Sidebar({
-  resumeUrl,
   onResumeChange,
   mobileOpen,
   onCloseMobile,
   editMode = false,
 }) {
+  const resumeUrl = useSelector(state => state?.hero?.data?.resumeUrl);
+  
   const active = useActiveSection(NAV_ITEMS.map((n) => n.id));
   const { theme, toggleTheme } = useTheme();
 
@@ -52,9 +63,6 @@ export default function Sidebar({
   const handleResumeClick = (e) => {
     e.preventDefault();
 
-    /*
-     * Pre-fill existing CV link.
-     */
     setResumeInput(resumeUrl || "");
 
     setShowResumePopup(true);
@@ -347,7 +355,7 @@ export default function Sidebar({
               <span className="w-4 h-4 rounded-full bg-white block" />
             </span>
           </button>
-
+          {isValidUrl(resumeUrl) ?
           <a
             href={resumeUrl}
             download
@@ -355,7 +363,15 @@ export default function Sidebar({
           >
             <Download size={16} />
             Download CV
-          </a>
+          </a> : <button
+            onClick={(e)=>alert("CV did not uploaded yet")}
+            download
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-paper-200 dark:border-white/10 text-sm font-medium text-ink-900/80 dark:text-paper-100/80 hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-white transition-colors"
+          >
+            <Download size={16} />
+            Download CV
+          </button>
+          }
         </div>
       </aside>
     </>

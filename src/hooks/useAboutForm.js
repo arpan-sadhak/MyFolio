@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {update} from "../features/aboutMe/aboutMeSlice"
 
-
-const useAboutForm = ({about}) => {
+const useAboutForm = ({ about }) => {
   
   const dispatch = useDispatch();
 
@@ -66,16 +64,11 @@ const useAboutForm = ({about}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(
-      update({
-        heading: formData.heading,
-        body: formData.body,
-        stats: formData.stats,
-      })
-    );
+    dispatch(update(formData));
   };
 
   return {
+    setFormData,
     formData,
     openIconPicker,
     setOpenIconPicker,
