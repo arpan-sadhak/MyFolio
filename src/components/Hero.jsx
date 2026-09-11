@@ -92,9 +92,9 @@ export default function Hero({ editMode= false}) {
     handleZoomOut,
     handleResetImage,
     handleSubmit,
-  } = useHeroForm({profile:profile});
+  } = useHeroForm({profile:profile.data});
 
-  if (profile?.loading){
+  if (profile?.loading || !formData.greeting){
     return (<HomeSkeleton/>)
   }
   

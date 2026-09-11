@@ -310,9 +310,10 @@ export default function Contact({ editMode = false }) {
     status,
   } = useContactForm({ contact: contact });
 
-  if (contact?.loading) {
+  if (contact?.loading || !contact) {
     return <ContactSkeleton />;
   }
+  
 
   return editMode ? (
     <section id="contact" className="mt-10 mb-16 scroll-mt-24">

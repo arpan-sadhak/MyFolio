@@ -68,8 +68,9 @@ export default function FeaturedProjects({ editMode }) {
     handleAddProject,
     handleSave,
   } = useFeatureProject({projects:projects?.data, signature:signature,});
+  
 
-  if (projects?.loading){
+  if (projects?.loading || !projectItems[0] || !signature){
     return (<ProjectsSkeleton/>)
   }
 

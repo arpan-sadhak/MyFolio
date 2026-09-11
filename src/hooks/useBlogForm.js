@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const useBlogForm = ({posts}) => {
-
+const useBlogForm = ({ posts }) => {
   const [blogPosts, setBlogPosts] = useState(
     Array.isArray(posts)
       ? posts.map((post) => ({
@@ -11,14 +10,24 @@ const useBlogForm = ({posts}) => {
           date: post.date ?? "",
           url: post.url ?? "",
         }))
-      : []
+      : [],
   );
 
-  const handleChange = (
-    id,
-    field,
-    value
-  ) => {
+  useEffect(() => {
+    setBlogPosts(
+      Array.isArray(posts)
+        ? posts.map((post) => ({
+            id: post.id ?? crypto.randomUUID(),
+            title: post.title ?? "",
+            excerpt: post.excerpt ?? "",
+            date: post.date ?? "",
+            url: post.url ?? "",
+          }))
+        : [],
+    );
+  }, [posts]);
+
+  const handleChange = (id, field, value) => {
     setBlogPosts((prev) =>
       prev.map((post) =>
         post.id === id
@@ -26,20 +35,14 @@ const useBlogForm = ({posts}) => {
               ...post,
               [field]: value,
             }
-          : post
-      )
+          : post,
+      ),
     );
   };
-
 
   const handleDelete = (id) => {
-    setBlogPosts((prev) =>
-      prev.filter(
-        (post) => post.id !== id
-      )
-    );
+    setBlogPosts((prev) => prev.filter((post) => post.id !== id));
   };
-
 
   const handleAdd = () => {
     const newPost = {
@@ -50,24 +53,18 @@ const useBlogForm = ({posts}) => {
       url: "",
     };
 
-    setBlogPosts((prev) => [
-      ...prev,
-      newPost,
-    ]);
+    setBlogPosts((prev) => [...prev, newPost]);
   };
 
+  const handleSave = () => {};
 
-  const handleSave = () => {
-
+  return {
+    blogPosts,
+    handleChange,
+    handleDelete,
+    handleAdd,
+    handleSave,
   };
-
-    return {
-        blogPosts,
-        handleChange,
-        handleDelete,
-        handleAdd,
-        handleSave,
-    };
-}
+};
 
 export default useBlogForm;

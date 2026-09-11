@@ -14,16 +14,17 @@ const FooterSkeleton = () => {
 
 
 
-export default function Footer({name, editMode = false}) {
+export default function Footer({ editMode = false}) {
+   const hero = useSelector((state) => state?.hero);
   
   
   const {
     handleSave,
     handleChange,
     footerData,
-  } = useFooterForm({name:name})
+  } = useFooterForm({name:hero?.data?.name})
 
-  if(true){
+  if(hero?.loading || !footerData.name){
     return (<FooterSkeleton/>)
   }
 

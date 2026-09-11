@@ -19,7 +19,7 @@ export default function Blog({ editMode = false }) {
   const { blogPosts, handleChange, handleDelete, handleAdd, handleSave } =
     useBlogForm({ posts: posts.data });
 
-  if (posts?.loading) {
+  if (posts?.loading || !blogPosts[0]) {
     return (
       <section id="blog" className="mt-10 scroll-mt-24">
         <p className="font-mono text-xs tracking-[0.2em] text-ink-900/50 dark:text-paper-100/40 uppercase mb-5">
@@ -47,7 +47,7 @@ export default function Blog({ editMode = false }) {
       </section>
     );
   }
-
+  
   return editMode ? (
     <section id="blog" className="mt-10 scroll-mt-24">
       {/* =====================================================

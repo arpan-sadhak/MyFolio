@@ -37,7 +37,7 @@ export default function Skills({ editMode = false }) {
   const { skillItems, handleChange, handleAdd, handleDelete, handleSave } =
     useSkillsForm({ skills: skills?.data });
 
-  if (skills?.loading) {
+  if (skills?.loading || !skillItems[0]) {
     return <SkillsSkeleton />;
   }
 

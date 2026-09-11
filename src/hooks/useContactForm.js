@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useContactForm = ({contact}) => {
     
@@ -18,6 +18,21 @@ const useContactForm = ({contact}) => {
         }))
       : [],
   }));
+
+  useEffect(()=>{
+    setContactData({
+    heading: contact?.heading || "",
+    email: contact?.email || "",
+    location: contact?.location || "",
+
+    social: Array.isArray(contact?.social)
+      ? contact.social.map((item) => ({
+          platform: item.platform || "github",
+          url: item.url || "",
+        }))
+      : [],
+  })
+  },[contact])
 
   const [openPicker, setOpenPicker] = useState(null);
 

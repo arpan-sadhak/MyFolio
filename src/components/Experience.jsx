@@ -65,7 +65,7 @@ export default function Experience({ editMode = false}) {
     handleSave,
   } = useExperienceForm({items:experience?.data});
 
-  if (experience?.loading) {
+  if (experience?.loading || !experienceItems[0]) {
     return (<ExperienceSkeleton/>)
   }
 

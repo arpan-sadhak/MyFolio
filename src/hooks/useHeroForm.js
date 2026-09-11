@@ -1,8 +1,7 @@
 import { useSelector } from "react-redux";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-const useHeroForm = ({profile}) => {
-    
+const useHeroForm = ({ profile }) => {
 
   const [formData, setFormData] = useState(() => ({
     greeting: profile?.greeting || "",
@@ -21,9 +20,26 @@ const useHeroForm = ({profile}) => {
     avatarScale: profile?.avatarScale ?? 1,
   }));
 
-  const [imagePreview, setImagePreview] = useState(
-    profile?.avatar || ""
-  );
+  useEffect(() => {
+    setFormData({
+      greeting: profile?.greeting || "",
+      firstName: profile?.firstName || "",
+      lastName: profile?.lastName || "",
+      role: profile?.role || "",
+      tagline: profile?.tagline || "",
+      avatar: profile?.avatar || "",
+      name: profile?.name || "",
+
+      yearsLabel: profile?.yearsLabel || "",
+      yearsSub: profile?.yearsSub || "",
+      availability: profile?.availability || "",
+      avatarPositionX: profile?.avatarPositionX ?? 50,
+      avatarPositionY: profile?.avatarPositionY ?? 50,
+      avatarScale: profile?.avatarScale ?? 1,
+    });
+  }, [profile]);
+
+  const [imagePreview, setImagePreview] = useState(profile?.avatar || "");
 
   const [selectedImageFile, setSelectedImageFile] = useState(null);
 
@@ -129,13 +145,9 @@ const useHeroForm = ({profile}) => {
 
     const sensitivity = 0.35;
 
-    let newX =
-      dragStartRef.current.positionX -
-      movementX * sensitivity;
+    let newX = dragStartRef.current.positionX - movementX * sensitivity;
 
-    let newY =
-      dragStartRef.current.positionY -
-      movementY * sensitivity;
+    let newY = dragStartRef.current.positionY - movementY * sensitivity;
 
     /*
      * Keep position within reasonable limits.
@@ -167,10 +179,7 @@ const useHeroForm = ({profile}) => {
   const handleZoomIn = () => {
     setFormData((prev) => ({
       ...prev,
-      avatarScale: Math.min(
-        3,
-        Number((prev.avatarScale + 0.1).toFixed(2))
-      ),
+      avatarScale: Math.min(3, Number((prev.avatarScale + 0.1).toFixed(2))),
     }));
   };
 
@@ -181,10 +190,7 @@ const useHeroForm = ({profile}) => {
   const handleZoomOut = () => {
     setFormData((prev) => ({
       ...prev,
-      avatarScale: Math.max(
-        1,
-        Number((prev.avatarScale - 0.1).toFixed(2))
-      ),
+      avatarScale: Math.max(1, Number((prev.avatarScale - 0.1).toFixed(2))),
     }));
   };
 
@@ -201,21 +207,19 @@ const useHeroForm = ({profile}) => {
     }));
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.log("Updated Hero data:", formData);
 
     console.log("Selected image file:", selectedImageFile);
-
   };
 
   return {
     formData,
     fileInputRef,
     imagePreview,
-    isDragging ,
+    isDragging,
     handleChange,
     handleImageChange,
     handlePointerDown,
@@ -225,7 +229,7 @@ const useHeroForm = ({profile}) => {
     handleZoomOut,
     handleResetImage,
     handleSubmit,
-  }
+  };
 };
 
 export default useHeroForm;

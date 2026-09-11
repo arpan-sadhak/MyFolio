@@ -340,7 +340,7 @@ export default function TechStack({  editMode = false }) {
     customEditor,
   } = useTechStackForm({ stack: stack.data });
 
-  if(stack?.loading){
+  if(stack?.loading || !techItems[0]){
     return  (<Skeleton/>)
   }
 

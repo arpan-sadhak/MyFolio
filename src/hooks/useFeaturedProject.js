@@ -1,11 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const useFeatureProject = ({projects, signature }) => {
-
-  
-  
-
-
+const useFeatureProject = ({ projects, signature }) => {
   const [projectItems, setProjectItems] = useState(
     Array.isArray(projects)
       ? projects.map((project) => ({
@@ -16,6 +11,19 @@ const useFeatureProject = ({projects, signature }) => {
   );
 
   const [signatureValue, setSignatureValue] = useState(signature || "");
+
+  useEffect(() => {
+    setProjectItems(
+      Array.isArray(projects)
+        ? projects.map((project) => ({
+            ...project,
+            id: project.id ?? crypto.randomUUID(),
+          }))
+        : [],
+    );
+
+    setSignatureValue(signature || "");
+  }, [projects, signature]);
 
   const handleProjectChange = (id, field, value) => {
     setProjectItems((prev) =>

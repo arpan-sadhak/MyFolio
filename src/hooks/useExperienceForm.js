@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const useExperienceForm = ({items}) => {
-
+const useExperienceForm = ({ items }) => {
   const [experienceItems, setExperienceItems] = useState(
     Array.isArray(items)
       ? items.map((item) => ({
@@ -14,6 +13,20 @@ const useExperienceForm = ({items}) => {
         }))
       : [],
   );
+
+  useEffect(() => {
+    setExperienceItems(
+      Array.isArray(items)
+        ? items.map((item) => ({
+            id: item.id ?? crypto.randomUUID(),
+            role: item.role ?? "",
+            period: item.period ?? "",
+            org: item.org ?? "",
+            description: item.description ?? "",
+          }))
+        : [],
+    );
+  }, [items]);
 
   const handleChange = (id, field, value) => {
     setExperienceItems((prev) =>
