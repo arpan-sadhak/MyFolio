@@ -43,7 +43,7 @@ export default function Sidebar({
   onCloseMobile,
   editMode = false,
 }) {
-  const resumeUrl = useSelector(state => state?.hero?.data?.resumeUrl);
+  const resumeUrl = useSelector(state => state.data.data?.resumeUrl);
   
   const active = useActiveSection(NAV_ITEMS.map((n) => n.id));
   const { theme, toggleTheme } = useTheme();

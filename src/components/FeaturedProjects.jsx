@@ -1,9 +1,7 @@
 import ProjectCard, { ProjectCardSkeleton } from "./ProjectCard";
 import { ArrowUpRight, TrendingUp, Plus, Trash2 } from "lucide-react";
 import useFeatureProject from "../hooks/useFeaturedProject";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchProject } from "../service/api";
-import { useEffect } from "react";
+import { useSelector } from 'react-redux';
 
 
 const ProjectsSkeleton = () => {
@@ -47,16 +45,10 @@ const ProjectsSkeleton = () => {
 
 export default function FeaturedProjects({ editMode }) {
 
-  const projects = useSelector(state => state?.projects);
-  const signature = useSelector((state) => state?.hero?.data?.name);
-  
-  
-  
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchProject());
-    
-  }, [dispatch]);
+  const projects = useSelector(state => state.data?.data?.project);
+  const signature = useSelector((state) => state.data?.data?.signature);
+const loading = useSelector((state) => state.data.loading);
+
   
 
   const {
@@ -67,10 +59,10 @@ export default function FeaturedProjects({ editMode }) {
     handleDeleteProject,
     handleAddProject,
     handleSave,
-  } = useFeatureProject({projects:projects?.data, signature:signature,});
+  } = useFeatureProject({projects:projects, signature:signature?.sign,});
   
 
-  if (projects?.loading || !projectItems[0] || !signature){
+  if (loading){
     return (<ProjectsSkeleton/>)
   }
 
@@ -213,7 +205,7 @@ export default function FeaturedProjects({ editMode }) {
       </div>
 
       <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {projects?.data?.map((project) => (
+        {projects?.map((project) => (
           <ProjectCard key={project._id} project={project} />
         ))}
 

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const useTechStackForm = ({ stack }) => {
+
+  const dispatch = useDispatch();
+
   const [techItems, setTechItems] = useState(
     Array.isArray(stack)
       ? stack.map((tech) => ({
@@ -16,19 +19,19 @@ const useTechStackForm = ({ stack }) => {
       : [],
   );
 
-  useEffect(()=>{
-    setTechItems(Array.isArray(stack)
-      ? stack.map((tech) => ({
-          id: tech.id ?? crypto.randomUUID(),
+  // useEffect(()=>{
+  //   setTechItems(Array.isArray(stack)
+  //     ? stack.map((tech) => ({
+  //         id: tech.id ?? crypto.randomUUID(),
 
-          name: tech.name ?? "",
+  //         name: tech.name ?? "",
 
-          icon: tech.icon ?? "react",
+  //         icon: tech.icon ?? "react",
 
-          type: tech.type ?? "devicon",
-        }))
-      : [],)
-  },[stack])
+  //         type: tech.type ?? "devicon",
+  //       }))
+  //     : [],)
+  // },[stack])
 
   const [openPicker, setOpenPicker] = useState(null);
 
@@ -143,15 +146,9 @@ const useTechStackForm = ({ stack }) => {
     setCustomEditor(null);
   };
 
-  const handleSave = () => {
-    const data = techItems.map((tech) => ({
-      id: tech.id,
-      name: tech.name,
-      icon: tech.icon,
-      type: tech.type,
-    }));
-
-    console.log("TECH STACK:", data);
+  const handleSave = (e) => {
+    e.preventDefault();
+    dispatch();
   };
 
   return {

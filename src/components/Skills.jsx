@@ -1,8 +1,7 @@
 import { Plus, Trash2 } from "lucide-react";
 import useSkillsForm from "../hooks/useSkillsForm";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchSkills } from "../service/api";
-import { useEffect } from "react";
+import {  useSelector } from "react-redux";
+
 
 const SkillsSkeleton = ({ count = 6 }) => {
   return (
@@ -27,17 +26,12 @@ const SkillsSkeleton = ({ count = 6 }) => {
 };
 
 export default function Skills({ editMode = false }) {
-  const skills = useSelector((state) => state?.skills);
-  
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchSkills());
-  }, [dispatch]);
-
+  const skills = useSelector((state) => state.data?.data?.skills);
+const loading = useSelector((state) => state.data.loading);  
   const { skillItems, handleChange, handleAdd, handleDelete, handleSave } =
-    useSkillsForm({ skills: skills?.data });
+    useSkillsForm({ skills: skills });
 
-  if (skills?.loading || !skillItems[0]) {
+  if (loading) {
     return <SkillsSkeleton />;
   }
 
@@ -171,7 +165,7 @@ export default function Skills({ editMode = false }) {
         Skills
       </p>
       <div className="grid sm:grid-cols-2 gap-x-8 gap-y-5">
-        {skills?.data?.map((skill) => (
+        {skills?.map((skill) => (
           <div key={skill.name}>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-sm font-medium text-ink-950 dark:text-white">

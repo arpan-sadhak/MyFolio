@@ -2,9 +2,8 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import useExperienceForm from "../hooks/useExperienceForm";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchExperience } from "../service/api";
-import { useEffect } from "react";
+import { useSelector } from 'react-redux';
+
 
 const ExperienceSkeleton = ({ count = 3 }) => {
   return (
@@ -48,14 +47,9 @@ const ExperienceSkeleton = ({ count = 3 }) => {
 
 
 export default function Experience({ editMode = false}) {
-  const experience = useSelector((state) => state?.experience);
-  
+  const experience = useSelector((state) => state.data?.data?.experience);
+const loading = useSelector((state) => state.data.loading);
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchExperience());
-    
-  }, [dispatch]);
 
    const {
     experienceItems,
@@ -63,9 +57,9 @@ export default function Experience({ editMode = false}) {
     handleDelete,
     handleAdd,
     handleSave,
-  } = useExperienceForm({items:experience?.data});
+  } = useExperienceForm({items:experience});
 
-  if (experience?.loading || !experienceItems[0]) {
+  if (loading) {
     return (<ExperienceSkeleton/>)
   }
 
@@ -226,7 +220,7 @@ export default function Experience({ editMode = false}) {
         Experience
       </p>
       <div className="space-y-4">
-        {experience?.data?.map((item, i) => (
+        {experience?.map((item, i) => (
           <div
             key={item._id}
             className="relative pl-8 pb-4 border-l-2 border-paper-200 dark:border-white/10 last:border-transparent"

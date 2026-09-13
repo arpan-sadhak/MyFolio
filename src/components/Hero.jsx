@@ -1,12 +1,7 @@
-
 import { ArrowUpRight, Camera, ZoomIn, ZoomOut } from "lucide-react";
 
 import useHeroForm from "../hooks/useHeroForm";
-import { useDispatch } from "react-redux";
-import { fetchHero } from "../service/api";
-import { useEffect } from "react";
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 const HomeSkeleton = () => {
   return (
@@ -68,16 +63,20 @@ const HomeSkeleton = () => {
   );
 };
 
+export default function Hero({ editMode = false }) {
+  const id = useSelector((state) => state.data?.data?.id);
+  const greeting = useSelector((state) => state.data?.data?.greeting);
+  const firstName = useSelector((state) => state.data?.data?.firstName);
+  const lastName = useSelector((state) => state.data?.data?.lastName);
+  const role = useSelector((state) => state.data?.data?.role);
+  const tagline = useSelector((state) => state.data?.data?.tagline);
+  const avatar = useSelector((state) => state.data?.data?.avatar);
+  const name = useSelector((state) => state.data?.data?.name);
+  const yearsLabel = useSelector((state) => state.data?.data?.yearsLabel);
+  const yearsSub = useSelector((state) => state.data?.data?.yearsSub);
+  const availability = useSelector((state) => state.data?.data?.availability);
+const loading = useSelector((state) => state.data.loading);  
 
-export default function Hero({ editMode= false}) {
-  const profile = useSelector(state => state?.hero);
-  
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchHero());
-  }, [dispatch]);
-  
   const {
     formData,
     imagePreview,
@@ -92,12 +91,26 @@ export default function Hero({ editMode= false}) {
     handleZoomOut,
     handleResetImage,
     handleSubmit,
-  } = useHeroForm({profile:profile.data});
+  } = useHeroForm({
+    profile: {
+      id,
+      greeting,
+      firstName,
+      lastName,
+      role,
+      tagline,
+      avatar,
+      name,
+      yearsLabel,
+      yearsSub,
+      availability,
+    },
+  });
 
-  if (profile?.loading || !formData.greeting){
-    return (<HomeSkeleton/>)
+  if (loading) {
+    return <HomeSkeleton />;
   }
-  
+
   return editMode ? (
     <section
       id="home"
@@ -393,21 +406,21 @@ export default function Hero({ editMode= false}) {
       <div className="grid lg:grid-cols-[0.8fr_auto] gap-10 items-center">
         <div className="lg:pl-20">
           <p className="font-mono text-xs tracking-[0.25em] text-brand-600 dark:text-brand-400 uppercase mb-3">
-            {profile?.data?.greeting}
+            {greeting}
           </p>
           <h1 className="font-display font-extrabold leading-[0.95] text-5xl sm:text-6xl lg:text-7xl text-ink-950 dark:text-white">
-            {profile?.data?.firstName}
+            {firstName}
             <br />
             <span className="text-brand-600 dark:text-brand-400">
-              {profile?.data?.lastName}
+              {lastName}
             </span>
           </h1>
 
           <p className="mt-5 text-lg font-medium text-ink-900/80 dark:text-paper-100/90 max-w-lg">
-            {profile?.data?.role}
+            {role}
           </p>
           <p className="mt-2 text-ink-900/50 dark:text-paper-100/50 max-w-md">
-            {profile?.data?.tagline}
+            {tagline}
           </p>
 
           <a
@@ -422,34 +435,34 @@ export default function Hero({ editMode= false}) {
           <div className="absolute inset-0 -z-10 rounded-full bg-brand-500/20 blur-3xl scale-110 animate-pulse-slow" />
           <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-full border-4 border-brand-500/30 p-2 animate-float">
             <div className="w-full h-full rounded-full overflow-hidden bg-ink-800 flex items-center justify-center">
-              {profile?.data?.avatar?.avatar ? (
+              {avatar?.avatar ? (
                 <img
-                  src={profile.data.avatar.avatar}
-                  alt={profile.data.name}
+                  src={avatar.avatar}
+                  alt={name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                   }}
                 />
-              ) : null}
+              ) : 
               <span className="font-display text-6xl font-bold text-brand-500/40 absolute">
-                {profile?.data?.firstName?.[0]}
-              </span>
+                {firstName?.[0]}
+              </span>}
             </div>
           </div>
 
           <div className="absolute -top-4 -right-4 sm:right-48 bg-brand-600 text-white rounded-2xl px-4 py-3 text-center shadow-glow">
             <p className="font-display font-extrabold text-lg leading-none">
-              {profile?.data?.yearsLabel}
+              {yearsLabel}
             </p>
             <p className="text-[10px] leading-tight mt-1 opacity-90 max-w-[70px]">
-              {profile?.data?.yearsSub}
+              {yearsSub}
             </p>
           </div>
 
           <div className="absolute -bottom-0 left-[26%] -translate-x-1/2 flex items-center gap-1.5 bg-white dark:bg-ink-900 border border-paper-200 dark:border-white/10 rounded-full px-3 py-1.5 text-xs font-medium text-ink-900 dark:text-paper-100 whitespace-nowrap shadow-sm">
             <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse-slow" />
-            {profile?.data?.availability}
+            {availability}
           </div>
         </div>
       </div>

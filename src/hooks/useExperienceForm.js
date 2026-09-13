@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const useExperienceForm = ({ items }) => {
+  const dispatch = useDispatch()
   const [experienceItems, setExperienceItems] = useState(
     Array.isArray(items)
       ? items.map((item) => ({
@@ -14,19 +15,19 @@ const useExperienceForm = ({ items }) => {
       : [],
   );
 
-  useEffect(() => {
-    setExperienceItems(
-      Array.isArray(items)
-        ? items.map((item) => ({
-            id: item.id ?? crypto.randomUUID(),
-            role: item.role ?? "",
-            period: item.period ?? "",
-            org: item.org ?? "",
-            description: item.description ?? "",
-          }))
-        : [],
-    );
-  }, [items]);
+  // useEffect(() => {
+  //   setExperienceItems(
+  //     Array.isArray(items)
+  //       ? items.map((item) => ({
+  //           id: item.id ?? crypto.randomUUID(),
+  //           role: item.role ?? "",
+  //           period: item.period ?? "",
+  //           org: item.org ?? "",
+  //           description: item.description ?? "",
+  //         }))
+  //       : [],
+  //   );
+  // }, [items]);
 
   const handleChange = (id, field, value) => {
     setExperienceItems((prev) =>
@@ -57,8 +58,9 @@ const useExperienceForm = ({ items }) => {
     setExperienceItems((prev) => [...prev, newItem]);
   };
 
-  const handleSave = () => {
-    console.log("EXPERIENCE DATA:", experienceItems);
+  const handleSave = (e) => {
+    e.preventDefault();
+    dispatch()
   };
   return {
     experienceItems,

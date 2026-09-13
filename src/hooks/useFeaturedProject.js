@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const useFeatureProject = ({ projects, signature }) => {
+
+  const dispatch = useDispatch()
+
   const [projectItems, setProjectItems] = useState(
     Array.isArray(projects)
       ? projects.map((project) => ({
@@ -12,18 +16,18 @@ const useFeatureProject = ({ projects, signature }) => {
 
   const [signatureValue, setSignatureValue] = useState(signature || "");
 
-  useEffect(() => {
-    setProjectItems(
-      Array.isArray(projects)
-        ? projects.map((project) => ({
-            ...project,
-            id: project.id ?? crypto.randomUUID(),
-          }))
-        : [],
-    );
+  // useEffect(() => {
+  //   setProjectItems(
+  //     Array.isArray(projects)
+  //       ? projects.map((project) => ({
+  //           ...project,
+  //           id: project.id ?? crypto.randomUUID(),
+  //         }))
+  //       : [],
+  //   );
 
-    setSignatureValue(signature || "");
-  }, [projects, signature]);
+  //   setSignatureValue(signature || "");
+  // }, [projects, signature]);
 
   const handleProjectChange = (id, field, value) => {
     setProjectItems((prev) =>
@@ -56,13 +60,9 @@ const useFeatureProject = ({ projects, signature }) => {
     setProjectItems((prev) => [...prev, newProject]);
   };
 
-  const handleSave = () => {
-    const data = {
-      projects: projectItems,
-      signature: signatureValue,
-    };
-
-    console.log("FEATURED PROJECT DATA:", data);
+  const handleSave = (e) => {
+   e.preventDefault();
+   dispatch()
   };
 
   return {

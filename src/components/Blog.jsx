@@ -2,24 +2,17 @@ import { useDispatch } from "react-redux";
 import useBlogForm from "../hooks/useBlogForm";
 
 import { ArrowUpRight, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { fetchBlog } from "../service/api";
 import { useSelector } from 'react-redux';
 
 export default function Blog({ editMode = false }) {
 
-  const posts = useSelector((state) => state?.blog);
-
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchBlog());
-  }, [dispatch]);
+  const posts = useSelector((state) => state.data?.data?.blog);
+const loading = useSelector((state) => state.data.loading);
 
   const { blogPosts, handleChange, handleDelete, handleAdd, handleSave } =
-    useBlogForm({ posts: posts.data });
+    useBlogForm({ posts });
 
-  if (posts?.loading || !blogPosts[0]) {
+  if (loading) {
     return (
       <section id="blog" className="mt-10 scroll-mt-24">
         <p className="font-mono text-xs tracking-[0.2em] text-ink-900/50 dark:text-paper-100/40 uppercase mb-5">
@@ -207,7 +200,7 @@ export default function Blog({ editMode = false }) {
         Blog
       </p>
       <div className="grid sm:grid-cols-2 gap-4">
-        {posts?.data?.map((post) => (
+        {posts?.map((post) => (
           <div
             key={post._id}
             className="rounded-2xl border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 p-5 flex flex-col justify-between"

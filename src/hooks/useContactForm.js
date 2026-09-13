@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const useContactForm = ({contact}) => {
     
-    
+    const dispatch = useDispatch();
 
   const [status, setStatus] = useState("idle");
 
@@ -19,20 +20,20 @@ const useContactForm = ({contact}) => {
       : [],
   }));
 
-  useEffect(()=>{
-    setContactData({
-    heading: contact?.heading || "",
-    email: contact?.email || "",
-    location: contact?.location || "",
+  // useEffect(()=>{
+  //   setContactData({
+  //   heading: contact?.heading || "",
+  //   email: contact?.email || "",
+  //   location: contact?.location || "",
 
-    social: Array.isArray(contact?.social)
-      ? contact.social.map((item) => ({
-          platform: item.platform || "github",
-          url: item.url || "",
-        }))
-      : [],
-  })
-  },[contact])
+  //   social: Array.isArray(contact?.social)
+  //     ? contact.social.map((item) => ({
+  //         platform: item.platform || "github",
+  //         url: item.url || "",
+  //       }))
+  //     : [],
+  // })
+  // },[contact])
 
   const [openPicker, setOpenPicker] = useState(null);
 
@@ -85,9 +86,9 @@ const useContactForm = ({contact}) => {
     setOpenPicker(null);
   };
 
-  const handleSave = () => {
-    console.log("DATA TO SAVE:");
-    console.log(contactData);
+  const handleSave = (e) => {
+    e.preventDefault();
+    dispatch()
   };
 
   const handleSubmit = (e) => {

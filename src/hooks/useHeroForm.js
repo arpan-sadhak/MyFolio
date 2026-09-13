@@ -1,9 +1,11 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 
 const useHeroForm = ({ profile }) => {
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState(() => ({
+    id : profile?._id || '',
     greeting: profile?.greeting || "",
     firstName: profile?.firstName || "",
     lastName: profile?.lastName || "",
@@ -15,29 +17,24 @@ const useHeroForm = ({ profile }) => {
     yearsLabel: profile?.yearsLabel || "",
     yearsSub: profile?.yearsSub || "",
     availability: profile?.availability || "",
-    avatarPositionX: profile?.avatarPositionX ?? 50,
-    avatarPositionY: profile?.avatarPositionY ?? 50,
-    avatarScale: profile?.avatarScale ?? 1,
   }));
 
-  useEffect(() => {
-    setFormData({
-      greeting: profile?.greeting || "",
-      firstName: profile?.firstName || "",
-      lastName: profile?.lastName || "",
-      role: profile?.role || "",
-      tagline: profile?.tagline || "",
-      avatar: profile?.avatar || "",
-      name: profile?.name || "",
+  // useEffect(() => {
+  //   setFormData({
+  //     id : profile?._id || '',
+  //     greeting: profile?.greeting || "",
+  //     firstName: profile?.firstName || "",
+  //     lastName: profile?.lastName || "",
+  //     role: profile?.role || "",
+  //     tagline: profile?.tagline || "",
+  //     avatar: profile?.avatar || "",
+  //     name: profile?.name || "",
 
-      yearsLabel: profile?.yearsLabel || "",
-      yearsSub: profile?.yearsSub || "",
-      availability: profile?.availability || "",
-      avatarPositionX: profile?.avatarPositionX ?? 50,
-      avatarPositionY: profile?.avatarPositionY ?? 50,
-      avatarScale: profile?.avatarScale ?? 1,
-    });
-  }, [profile]);
+  //     yearsLabel: profile?.yearsLabel || "",
+  //     yearsSub: profile?.yearsSub || "",
+  //     availability: profile?.availability || "",
+  //   });
+  // }, [profile]);
 
   const [imagePreview, setImagePreview] = useState(profile?.avatar || "");
 
@@ -73,18 +70,8 @@ const useHeroForm = ({ profile }) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
-
-    /*
-     * Keep the actual File.
-     *
-     * This is important because later you can upload
-     * the original file to Cloudinary/backend.
-     */
     setSelectedImageFile(file);
 
-    /*
-     * FileReader gives a reliable local preview.
-     */
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -207,12 +194,11 @@ const useHeroForm = ({ profile }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit =  (e) => {
     e.preventDefault();
-
-    console.log("Updated Hero data:", formData);
-
-    console.log("Selected image file:", selectedImageFile);
+    console.log(formData);
+    
+    dispatch()
   };
 
   return {

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const useSkillsForm = ({ skills }) => {
+
+  const dispatch = useDispatch();
+
   const [skillItems, setSkillItems] = useState(
     Array.isArray(skills)
       ? skills.map((skill) => ({
@@ -13,19 +17,19 @@ const useSkillsForm = ({ skills }) => {
       : [],
   );
 
-  useEffect(() => {
-    setSkillItems(
-      Array.isArray(skills)
-        ? skills.map((skill) => ({
-            id: skill.id ?? crypto.randomUUID(),
+  // useEffect(() => {
+  //   setSkillItems(
+  //     Array.isArray(skills)
+  //       ? skills.map((skill) => ({
+  //           id: skill.id ?? crypto.randomUUID(),
 
-            name: skill.name ?? "",
+  //           name: skill.name ?? "",
 
-            level: Math.min(100, Math.max(0, Number(skill.level) || 0)),
-          }))
-        : [],
-    );
-  }, [skills]);
+  //           level: Math.min(100, Math.max(0, Number(skill.level) || 0)),
+  //         }))
+  //       : [],
+  //   );
+  // }, [skills]);
 
   const handleChange = (id, field, value) => {
     setSkillItems((prev) =>
@@ -71,8 +75,9 @@ const useSkillsForm = ({ skills }) => {
     setSkillItems((prev) => prev.filter((skill) => skill.id !== id));
   };
 
-  const handleSave = () => {
-    console.log("SKILLS DATA:", skillItems);
+  const handleSave = (e) => {
+    e.preventDefault();
+    dispatch();
   };
 
   return {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const useAboutForm = ({ about }) => {
-
+  
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState(() => ({
@@ -12,15 +12,17 @@ const useAboutForm = ({ about }) => {
       ? about.stats.map((stat) => ({ ...stat }))
       : [],
   }));
-  useEffect(() => {
-    setFormData({
-      heading: about?.heading,
-      body: about?.body,
-      stats: Array.isArray(about?.stats)
-        ? about.stats.map((stat) => ({ ...stat }))
-        : [],
-    });
-  }, [about]);
+  
+  
+  // useEffect(() => {    
+  //   setFormData({
+  //     heading: about?.heading,
+  //     body: about?.body,
+  //     stats: Array.isArray(about?.stats)
+  //       ? about.stats.map((stat) => ({ ...stat }))
+  //       : [],
+  //   });
+  // }, [about]);
 
   const [openIconPicker, setOpenIconPicker] = useState(null);
 
@@ -72,8 +74,7 @@ const useAboutForm = ({ about }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(update(formData));
+    dispatch();
   };
 
   return {

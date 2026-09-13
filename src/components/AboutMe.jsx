@@ -4,9 +4,6 @@ import IconPicker from "./icons/IconPicker";
 import { Plus, Trash2 } from "lucide-react";
 import { ICONS } from "./icons/IconPicker";
 import useAboutForm from "../hooks/useAboutForm";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchAbout } from "../service/api";
 import { useSelector } from "react-redux";
 
 const AboutSkeleton = () => {
@@ -58,12 +55,12 @@ const AboutSkeleton = () => {
 };
 
 export function AboutMe({ editMode = false }) {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchAbout());
-  }, [dispatch]);
 
-  const about = useSelector((state) => state?.about);
+  const heading = useSelector((state) => state.data?.data?.heading);
+  const body = useSelector((state) => state.data?.data?.body);
+  const stats = useSelector((state) => state.data?.data?.stats);
+  const loading = useSelector((state) => state.data.loading);
+  
 
   let {
     formData,
@@ -74,9 +71,10 @@ export function AboutMe({ editMode = false }) {
     handleDeleteStat,
     handleAddStat,
     handleSubmit,
-  } = useAboutForm({ about: about?.data });
+  } = useAboutForm({ about: {heading, body, stats}});
 
-  if (about?.loading || !formData.heading) {
+  if (loading) {
+    
     return <AboutSkeleton />;
   }
   
@@ -234,10 +232,10 @@ export function AboutMe({ editMode = false }) {
       <div className="grid lg:grid-cols-[1fr_1.4fr] gap-8">
         <div>
           <p className="font-mono text-xs tracking-[0.2em] text-brand-600 dark:text-brand-400 uppercase mb-3">
-            {about?.data?.heading}
+            {heading}
           </p>
           <p className="text-ink-900/70 dark:text-paper-100/60 leading-relaxed">
-            {about?.data?.body}
+            {body}
           </p>
           <a
             href="#contact"
@@ -248,7 +246,7 @@ export function AboutMe({ editMode = false }) {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {about?.data?.stats?.map((stat) => {
+          {stats?.map((stat) => {
             const Icon = ICONS[stat?.icon] || Layers;
             return (
               <div

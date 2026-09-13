@@ -6,12 +6,12 @@ const useFooterForm = ({ name }) => {
     name: name || "",
     copyright: "Built with React & Tailwind CSS.",
   });
-  useEffect(() => {
-    setFooterData({
-      name: name || "",
-      copyright: "Built with React & Tailwind CSS.",
-    });
-  }, [name]);
+  // useEffect(() => {
+  //   setFooterData({
+  //     name: name || "",
+  //     copyright: "Built with React & Tailwind CSS.",
+  //   });
+  // }, [name]);
 
   const handleChange = (field, value) => {
     setFooterData((prev) => ({

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const useBlogForm = ({ posts }) => {
+  const dispatch = useDispatch();
   const [blogPosts, setBlogPosts] = useState(
     Array.isArray(posts)
       ? posts.map((post) => ({
@@ -13,19 +15,19 @@ const useBlogForm = ({ posts }) => {
       : [],
   );
 
-  useEffect(() => {
-    setBlogPosts(
-      Array.isArray(posts)
-        ? posts.map((post) => ({
-            id: post.id ?? crypto.randomUUID(),
-            title: post.title ?? "",
-            excerpt: post.excerpt ?? "",
-            date: post.date ?? "",
-            url: post.url ?? "",
-          }))
-        : [],
-    );
-  }, [posts]);
+  // useEffect(() => {
+  //   setBlogPosts(
+  //     Array.isArray(posts)
+  //       ? posts.map((post) => ({
+  //           id: post.id ?? crypto.randomUUID(),
+  //           title: post.title ?? "",
+  //           excerpt: post.excerpt ?? "",
+  //           date: post.date ?? "",
+  //           url: post.url ?? "",
+  //         }))
+  //       : [],
+  //   );
+  // }, [posts]);
 
   const handleChange = (id, field, value) => {
     setBlogPosts((prev) =>
@@ -56,7 +58,10 @@ const useBlogForm = ({ posts }) => {
     setBlogPosts((prev) => [...prev, newPost]);
   };
 
-  const handleSave = () => {};
+  const handleSave = (e) => {
+    e.preventDefault();
+    dispatch();
+  };
 
   return {
     blogPosts,

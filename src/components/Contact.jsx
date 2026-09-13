@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import useContactForm from "../hooks/useContactForm";
 import {
   Mail,
@@ -10,8 +10,8 @@ import {
   Search,
   Globe,
 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchContact } from "../service/api";
+import { useSelector } from "react-redux";
+
 
 function GithubIcon({ size = 16 }) {
   return (
@@ -290,12 +290,10 @@ const ContactSkeleton = () => {
 };
 
 export default function Contact({ editMode = false }) {
-  const contact = useSelector((state) => state?.contact?.data);
+  const contact = useSelector((state) => state.data?.data?.contact);
+const loading = useSelector((state) => state.data.loading);  
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchContact());
-  }, [dispatch]);
+
 
   const {
     handleSubmit,
@@ -310,7 +308,7 @@ export default function Contact({ editMode = false }) {
     status,
   } = useContactForm({ contact: contact });
 
-  if (contact?.loading || !contact) {
+  if (loading) {
     return <ContactSkeleton />;
   }
   

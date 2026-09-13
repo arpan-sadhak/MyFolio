@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 import { TechBadge, TechIcon } from "./icons/TechIcons";
 import useTechStackForm from "../hooks/useTechStackForm";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchTechStack } from "../service/api";
+import { useSelector } from 'react-redux';
+
 
 const TECH_OPTIONS = [
   // Frontend
@@ -319,11 +319,8 @@ function Skeleton(){
 
 export default function TechStack({  editMode = false }) {
   const stack = useSelector((state) => state?.techStack);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchTechStack());
-  }, [dispatch]);
+    const loading = useSelector((state)=>state?.loading);
+  
   
 
   const {
@@ -338,9 +335,9 @@ export default function TechStack({  editMode = false }) {
     openPicker,
     techItems,
     customEditor,
-  } = useTechStackForm({ stack: stack.data });
+  } = useTechStackForm({ stack: stack});
 
-  if(stack?.loading || !techItems[0]){
+  if(loading || !techItems[0]){
     return  (<Skeleton/>)
   }
 

@@ -15,16 +15,17 @@ const FooterSkeleton = () => {
 
 
 export default function Footer({ editMode = false}) {
-   const hero = useSelector((state) => state?.hero);
+   const name = useSelector((state) => state.data?.data?.name);
+const loading = useSelector((state) => state.data.loading);
   
   
   const {
     handleSave,
     handleChange,
     footerData,
-  } = useFooterForm({name:hero?.data?.name})
+  } = useFooterForm({name:name})
 
-  if(hero?.loading || !footerData.name){
+  if(loading ){
     return (<FooterSkeleton/>)
   }
 
