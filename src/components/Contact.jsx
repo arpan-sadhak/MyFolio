@@ -156,6 +156,7 @@ const SOCIAL_OPTIONS = [
   },
 ];
 
+
 function SocialPicker({ value, onChange, onClose }) {
   const [search, setSearch] = useState("");
 
@@ -289,9 +290,14 @@ const ContactSkeleton = () => {
   );
 };
 
+const ICON = (name) => () => {
+  return `<${name}Icon />`
+}
+
 export default function Contact({ editMode = false }) {
   const contact = useSelector((state) => state.data?.data?.contact);
 const loading = useSelector((state) => state.data.loading);  
+
 
 
 
@@ -545,26 +551,8 @@ const loading = useSelector((state) => state.data.loading);
             </div>
           </div>
           <div className="flex items-center gap-3 mt-8">
-            {/* <a
-              href={contact?.social?.github}
-              target="_blank"
-              rel="noreferrer"
-              className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center hover:bg-white/25 transition-colors"
-              aria-label="GitHub"
-            >
-              <GithubIcon />
-            </a>
-            <a
-              href={contact?.social?.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center hover:bg-white/25 transition-colors"
-              aria-label="LinkedIn"
-            >
-              <LinkedinIcon />
-            </a> */}
-            {contact?.social?.map((item, index) => {
-              const Icon = SOCIAL_ICONS[item.platform] || Globe;
+            {contact?.Social?.map((item, index) => {
+              const Icon = SOCIAL_ICONS[item.platform.toLowerCase()] || Globe;           
 
               return (
                 <div key={index} className="relative flex items-center gap-3">

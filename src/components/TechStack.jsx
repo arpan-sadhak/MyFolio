@@ -318,8 +318,8 @@ function Skeleton(){
 }
 
 export default function TechStack({  editMode = false }) {
-  const stack = useSelector((state) => state?.techStack);
-    const loading = useSelector((state)=>state?.loading);
+  const stack = useSelector((state) => state.data?.data?.techStack);
+    const loading = useSelector((state)=>state.data?.loading);
   
   
 
@@ -337,7 +337,7 @@ export default function TechStack({  editMode = false }) {
     customEditor,
   } = useTechStackForm({ stack: stack});
 
-  if(loading || !techItems[0]){
+  if(loading){
     return  (<Skeleton/>)
   }
 
@@ -467,7 +467,7 @@ export default function TechStack({  editMode = false }) {
           Tech Stack
         </p>
         <div className="flex flex-wrap gap-3">
-          {stack?.data?.map((tech) => (
+          {stack?.map((tech) => (
             <div key={tech.name} title={tech.name}>
               <TechBadge icon={tech.icon} name={tech.name} />
             </div>

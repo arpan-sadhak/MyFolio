@@ -15,8 +15,11 @@ const FooterSkeleton = () => {
 
 
 export default function Footer({ editMode = false}) {
-   const name = useSelector((state) => state.data?.data?.name);
+   const firstName = useSelector((state) => state.data?.data?.firstName);
+   const lastName = useSelector((state) => state.data?.data?.lastName);
 const loading = useSelector((state) => state.data.loading);
+
+
   
   
   const {
@@ -80,7 +83,7 @@ const loading = useSelector((state) => state.data.loading);
     </footer>
   ) : (
     <footer className="pb-8 pt-2 text-center text-xs text-ink-900/40 dark:text-paper-100/30">
-      © {new Date().getFullYear()} {name}. Built with React & Tailwind CSS.
+      © {new Date().getFullYear()} {firstName} {lastName}. Built with React & Tailwind CSS.
     </footer>
   );
 }
