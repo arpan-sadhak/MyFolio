@@ -5,6 +5,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { ICONS } from "./icons/IconPicker";
 import useAboutForm from "../hooks/useAboutForm";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const AboutSkeleton = () => {
   return (
@@ -55,31 +56,30 @@ const AboutSkeleton = () => {
 };
 
 export function AboutMe({ editMode = false }) {
-
   const heading = useSelector((state) => state.data?.data?.heading);
   const body = useSelector((state) => state.data?.data?.body);
   const stats = useSelector((state) => state.data?.data?.stats);
   const loading = useSelector((state) => state.data.loading);
-  
+  const loaded = useSelector((state) => state.data.loaded);
 
-  let {
-    formData,
-    openIconPicker,
-    setOpenIconPicker,
-    handleAboutChange,
-    handleStatChange,
-    handleDeleteStat,
-    handleAddStat,
-    handleSubmit,
-  } = useAboutForm({ about: {heading, body, stats}});
+  const {
+      formData,
+      openIconPicker,
+      setOpenIconPicker,
+      handleAboutChange,
+      handleStatChange,
+      handleDeleteStat,
+      handleAddStat,
+      handleSubmit,
+    } = useAboutForm({ about: { heading, body, stats }, loaded });
+
 
   if (loading) {
-    
     return <AboutSkeleton />;
   }
-  
 
   return editMode ? (
+    loaded &&
     <section
       id="about"
       className="mt-10 scroll-mt-24 rounded-3xl border border-paper-200 dark:border-white/5 bg-paper-50 dark:bg-ink-900/60 p-6 sm:p-8"
@@ -87,7 +87,6 @@ export function AboutMe({ editMode = false }) {
       <form onSubmit={handleSubmit}>
         <div className="grid lg:grid-cols-[1fr_1.4fr] gap-8">
           <div>
-
             {/* Heading */}
             <input
               type="text"
@@ -123,7 +122,7 @@ export function AboutMe({ editMode = false }) {
           ================================================= */}
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {formData.stats.map((stat, index) => {
+            {formData.stats?.map((stat, index) => {
               const Icon = ICONS[stat.icon] || Layers;
 
               return (

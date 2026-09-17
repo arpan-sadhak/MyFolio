@@ -1,28 +1,31 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-const useAboutForm = ({ about }) => {
-  
+const useAboutForm = ({ about, loaded }) => {
+
   const dispatch = useDispatch();
+  
 
   const [formData, setFormData] = useState(() => ({
-    heading: about?.heading,
-    body: about?.body,
-    stats: Array.isArray(about?.stats)
+    heading: about.heading || '',
+    body: about.body || '',
+    stats: Array.isArray(about.stats)
       ? about.stats.map((stat) => ({ ...stat }))
       : [],
   }));
+
+
   
-  
-  // useEffect(() => {    
-  //   setFormData({
-  //     heading: about?.heading,
-  //     body: about?.body,
-  //     stats: Array.isArray(about?.stats)
-  //       ? about.stats.map((stat) => ({ ...stat }))
-  //       : [],
-  //   });
-  // }, [about]);
+  useEffect(() => {        
+    
+    setFormData({
+    heading: about.heading || '',
+    body: about.body || '',
+    stats: Array.isArray(about.stats)
+      ? about.stats.map((stat) => ({ ...stat }))
+      : [],
+    });
+  }, [loaded]);
 
   const [openIconPicker, setOpenIconPicker] = useState(null);
 

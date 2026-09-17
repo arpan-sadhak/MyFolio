@@ -28,14 +28,17 @@ const SkillsSkeleton = ({ count = 6 }) => {
 export default function Skills({ editMode = false }) {
   const skills = useSelector((state) => state.data?.data?.skills);
 const loading = useSelector((state) => state.data.loading);  
+  const loaded = useSelector((state) => state.data.loaded);
+
   const { skillItems, handleChange, handleAdd, handleDelete, handleSave } =
-    useSkillsForm({ skills: skills });
+    useSkillsForm({ skills: skills, loaded });
 
   if (loading) {
     return <SkillsSkeleton />;
   }
 
   return editMode ? (
+    loaded && 
     <section id="skills" className="mt-10 scroll-mt-24">
       {/* =====================================================
           TITLE

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-const useFeatureProject = ({ projects, signature }) => {
+const useFeatureProject = ({ projects, signature, loaded }) => {
 
   const dispatch = useDispatch()
 
@@ -16,18 +16,18 @@ const useFeatureProject = ({ projects, signature }) => {
 
   const [signatureValue, setSignatureValue] = useState(signature || "");
 
-  // useEffect(() => {
-  //   setProjectItems(
-  //     Array.isArray(projects)
-  //       ? projects.map((project) => ({
-  //           ...project,
-  //           id: project.id ?? crypto.randomUUID(),
-  //         }))
-  //       : [],
-  //   );
+  useEffect(() => {
+    setProjectItems(
+      Array.isArray(projects)
+        ? projects.map((project) => ({
+            ...project,
+            id: project.id ?? crypto.randomUUID(),
+          }))
+        : [],
+    );
 
-  //   setSignatureValue(signature || "");
-  // }, [projects, signature]);
+    setSignatureValue(signature || "");
+  }, [loaded]);
 
   const handleProjectChange = (id, field, value) => {
     setProjectItems((prev) =>

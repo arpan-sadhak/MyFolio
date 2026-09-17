@@ -296,7 +296,8 @@ const ICON = (name) => () => {
 
 export default function Contact({ editMode = false }) {
   const contact = useSelector((state) => state.data?.data?.contact);
-const loading = useSelector((state) => state.data.loading);  
+const loading = useSelector((state) => state.data.loading);
+  const loaded = useSelector((state) => state.data.loaded);
 
 
 
@@ -312,7 +313,7 @@ const loading = useSelector((state) => state.data.loading);
     openPicker,
     contactData,
     status,
-  } = useContactForm({ contact: contact });
+  } = useContactForm({ contact: contact, loaded });
 
   if (loading) {
     return <ContactSkeleton />;
@@ -320,6 +321,7 @@ const loading = useSelector((state) => state.data.loading);
   
 
   return editMode ? (
+    loaded &&
     <section id="contact" className="mt-10 mb-16 scroll-mt-24">
       {/* TITLE */}
 

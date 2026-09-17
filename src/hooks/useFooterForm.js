@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const useFooterForm = ({ name }) => {
+const useFooterForm = ({ name, loaded }) => {
   const [footerData, setFooterData] = useState({
     name: name || "",
     copyright: "Built with React & Tailwind CSS.",
   });
-  // useEffect(() => {
-  //   setFooterData({
-  //     name: name || "",
-  //     copyright: "Built with React & Tailwind CSS.",
-  //   });
-  // }, [name]);
+  useEffect(() => {
+    setFooterData({
+      name: name || "",
+      copyright: "Built with React & Tailwind CSS.",
+    });
+  }, [loaded]);
 
   const handleChange = (field, value) => {
     setFooterData((prev) => ({

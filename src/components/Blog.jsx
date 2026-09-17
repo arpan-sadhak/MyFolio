@@ -8,9 +8,10 @@ export default function Blog({ editMode = false }) {
 
   const posts = useSelector((state) => state.data?.data?.blog);
 const loading = useSelector((state) => state.data.loading);
+  const loaded = useSelector((state) => state.data.loaded);
 
   const { blogPosts, handleChange, handleDelete, handleAdd, handleSave } =
-    useBlogForm({ posts });
+    useBlogForm({ posts, loaded });
 
   if (loading) {
     return (
@@ -42,6 +43,7 @@ const loading = useSelector((state) => state.data.loading);
   }
   
   return editMode ? (
+    loaded &&
     <section id="blog" className="mt-10 scroll-mt-24">
       {/* =====================================================
           SECTION TITLE

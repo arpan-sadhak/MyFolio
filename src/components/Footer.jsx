@@ -18,6 +18,7 @@ export default function Footer({ editMode = false}) {
    const firstName = useSelector((state) => state.data?.data?.firstName);
    const lastName = useSelector((state) => state.data?.data?.lastName);
 const loading = useSelector((state) => state.data.loading);
+  const loaded = useSelector((state) => state.data.loaded);
 
 
   
@@ -26,13 +27,14 @@ const loading = useSelector((state) => state.data.loading);
     handleSave,
     handleChange,
     footerData,
-  } = useFooterForm({name:name})
+  } = useFooterForm({name:`${firstName} ${lastName}`, loaded})
 
   if(loading ){
     return (<FooterSkeleton/>)
   }
 
   return editMode ? (
+    loaded &&
     <footer className="pb-8 pt-2 text-center text-xs text-ink-900/40 dark:text-paper-100/30">
       {/* =====================================================
           COPYRIGHT

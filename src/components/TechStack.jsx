@@ -320,6 +320,7 @@ function Skeleton(){
 export default function TechStack({  editMode = false }) {
   const stack = useSelector((state) => state.data?.data?.techStack);
     const loading = useSelector((state)=>state.data?.loading);
+      const loaded = useSelector((state) => state.data.loaded);
   
   
 
@@ -335,13 +336,14 @@ export default function TechStack({  editMode = false }) {
     openPicker,
     techItems,
     customEditor,
-  } = useTechStackForm({ stack: stack});
+  } = useTechStackForm({ stack: stack, loaded});
 
   if(loading){
     return  (<Skeleton/>)
   }
 
   return editMode ? (
+    loaded && 
     <section className="mt-10">
       <div className="rounded-3xl border border-paper-200 dark:border-white/5 bg-paper-50 dark:bg-ink-900/60 p-6">
         {/* =================================================

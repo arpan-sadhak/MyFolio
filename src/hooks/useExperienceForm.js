@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const useExperienceForm = ({ items }) => {
+const useExperienceForm = ({ items, loaded }) => {
   const dispatch = useDispatch()
   const [experienceItems, setExperienceItems] = useState(
     Array.isArray(items)
@@ -15,19 +15,19 @@ const useExperienceForm = ({ items }) => {
       : [],
   );
 
-  // useEffect(() => {
-  //   setExperienceItems(
-  //     Array.isArray(items)
-  //       ? items.map((item) => ({
-  //           id: item.id ?? crypto.randomUUID(),
-  //           role: item.role ?? "",
-  //           period: item.period ?? "",
-  //           org: item.org ?? "",
-  //           description: item.description ?? "",
-  //         }))
-  //       : [],
-  //   );
-  // }, [items]);
+  useEffect(() => {
+    setExperienceItems(
+      Array.isArray(items)
+        ? items.map((item) => ({
+            id: item.id ?? crypto.randomUUID(),
+            role: item.role ?? "",
+            period: item.period ?? "",
+            org: item.org ?? "",
+            description: item.description ?? "",
+          }))
+        : [],
+    );
+  }, [loaded]);
 
   const handleChange = (id, field, value) => {
     setExperienceItems((prev) =>

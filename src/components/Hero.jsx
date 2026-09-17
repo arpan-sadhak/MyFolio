@@ -76,6 +76,7 @@ export default function Hero({ editMode = false }) {
   const yearsSub = useSelector((state) => state.data?.data?.yearsSub);
   const availability = useSelector((state) => state.data?.data?.availability);
 const loading = useSelector((state) => state.data.loading);  
+  const loaded = useSelector((state) => state.data.loaded);
 
   const {
     formData,
@@ -105,6 +106,7 @@ const loading = useSelector((state) => state.data.loading);
       yearsSub,
       availability,
     },
+    loaded,
   });
 
   if (loading) {
@@ -112,6 +114,7 @@ const loading = useSelector((state) => state.data.loading);
   }
 
   return editMode ? (
+    loaded && 
     <section
       id="home"
       className="relative pt-10 lg:pt-4 pb-4 scroll-mt-20 overflow-hidden"

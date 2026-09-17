@@ -44,6 +44,8 @@ export default function Sidebar({
   editMode = false,
 }) {
   const resumeUrl = useSelector(state => state.data.data?.resumeUrl);
+  const firstName = useSelector((state) => state.data?.data?.firstName);
+   const lastName = useSelector((state) => state.data?.data?.lastName);
   
   const active = useActiveSection(NAV_ITEMS.map((n) => n.id));
   const { theme, toggleTheme } = useTheme();
@@ -358,14 +360,12 @@ export default function Sidebar({
           {isValidUrl(resumeUrl) ?
           <a
             href={resumeUrl}
-            download
+            download={`${firstName}_${lastName}_CV.pdf`}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-paper-200 dark:border-white/10 text-sm font-medium text-ink-900/80 dark:text-paper-100/80 hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-white transition-colors"
           >
             <Download size={16} />
             Download CV
           </a> : <button
-            onClick={(e)=>alert("CV did not uploaded yet")}
-            download
             className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-paper-200 dark:border-white/10 text-sm font-medium text-ink-900/80 dark:text-paper-100/80 hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-white transition-colors"
           >
             <Download size={16} />

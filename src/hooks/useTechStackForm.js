@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-const useTechStackForm = ({ stack }) => {
+const useTechStackForm = ({ stack, loaded }) => {
 
   const dispatch = useDispatch();
 
@@ -19,19 +19,19 @@ const useTechStackForm = ({ stack }) => {
       : [],
   );
 
-  // useEffect(()=>{
-  //   setTechItems(Array.isArray(stack)
-  //     ? stack.map((tech) => ({
-  //         id: tech.id ?? crypto.randomUUID(),
+  useEffect(()=>{
+    setTechItems(Array.isArray(stack)
+      ? stack.map((tech) => ({
+          id: tech.id ?? crypto.randomUUID(),
 
-  //         name: tech.name ?? "",
+          name: tech.name ?? "",
 
-  //         icon: tech.icon ?? "react",
+          icon: tech.icon ?? "react",
 
-  //         type: tech.type ?? "devicon",
-  //       }))
-  //     : [],)
-  // },[stack])
+          type: tech.type ?? "devicon",
+        }))
+      : [],)
+  },[loaded])
 
   const [openPicker, setOpenPicker] = useState(null);
 

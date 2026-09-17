@@ -49,6 +49,7 @@ const ExperienceSkeleton = ({ count = 3 }) => {
 export default function Experience({ editMode = false}) {
   const experience = useSelector((state) => state.data?.data?.experience);
 const loading = useSelector((state) => state.data.loading);
+  const loaded = useSelector((state) => state.data.loaded);
 
 
    const {
@@ -57,13 +58,14 @@ const loading = useSelector((state) => state.data.loading);
     handleDelete,
     handleAdd,
     handleSave,
-  } = useExperienceForm({items:experience});
+  } = useExperienceForm({items:experience, loaded});
 
   if (loading) {
     return (<ExperienceSkeleton/>)
   }
 
   return editMode ? (
+    loaded &&
     <section id="experience" className="mt-10 scroll-mt-24">
       {/* =====================================================
           SECTION TITLE

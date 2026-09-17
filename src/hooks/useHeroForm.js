@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 
-const useHeroForm = ({ profile }) => {
+const useHeroForm = ({ profile, loaded }) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState(() => ({
@@ -19,22 +19,22 @@ const useHeroForm = ({ profile }) => {
     availability: profile?.availability || "",
   }));
 
-  // useEffect(() => {
-  //   setFormData({
-  //     id : profile?._id || '',
-  //     greeting: profile?.greeting || "",
-  //     firstName: profile?.firstName || "",
-  //     lastName: profile?.lastName || "",
-  //     role: profile?.role || "",
-  //     tagline: profile?.tagline || "",
-  //     avatar: profile?.avatar || "",
-  //     name: profile?.name || "",
+  useEffect(() => {
+    setFormData({
+      id : profile?._id || '',
+      greeting: profile?.greeting || "",
+      firstName: profile?.firstName || "",
+      lastName: profile?.lastName || "",
+      role: profile?.role || "",
+      tagline: profile?.tagline || "",
+      avatar: profile?.avatar || "",
+      name: profile?.name || "",
 
-  //     yearsLabel: profile?.yearsLabel || "",
-  //     yearsSub: profile?.yearsSub || "",
-  //     availability: profile?.availability || "",
-  //   });
-  // }, [profile]);
+      yearsLabel: profile?.yearsLabel || "",
+      yearsSub: profile?.yearsSub || "",
+      availability: profile?.availability || "",
+    });
+  }, [loaded]);
 
   const [imagePreview, setImagePreview] = useState(profile?.avatar || "");
 

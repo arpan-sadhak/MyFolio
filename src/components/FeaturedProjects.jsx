@@ -48,6 +48,7 @@ export default function FeaturedProjects({ editMode }) {
   const projects = useSelector(state => state.data?.data?.project);
   const signature = useSelector((state) => state.data?.data?.signature);
 const loading = useSelector((state) => state.data.loading);
+  const loaded = useSelector((state) => state.data.loaded);
 
   
 
@@ -59,7 +60,7 @@ const loading = useSelector((state) => state.data.loading);
     handleDeleteProject,
     handleAddProject,
     handleSave,
-  } = useFeatureProject({projects:projects, signature:signature?.sign,});
+  } = useFeatureProject({projects:projects, signature:signature?.sign, loaded});
   
 
   if (loading){
@@ -67,6 +68,7 @@ const loading = useSelector((state) => state.data.loading);
   }
 
   return editMode ? (
+    loaded && 
     <section id="projects" className="mt-10 scroll-mt-24">
       {/* =====================================================
           HEADER

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-const useContactForm = ({contact}) => {
+const useContactForm = ({contact, loaded}) => {
     
     const dispatch = useDispatch();
 
@@ -12,28 +12,29 @@ const useContactForm = ({contact}) => {
     email: contact?.email || "",
     location: contact?.location || "",
 
-    social: Array.isArray(contact?.social)
-      ? contact.social.map((item) => ({
+    social: Array.isArray(contact?.Social)
+      ? contact.Social.map((item) => ({
           platform: item.platform || "github",
           url: item.url || "",
         }))
       : [],
   }));
 
-  // useEffect(()=>{
-  //   setContactData({
-  //   heading: contact?.heading || "",
-  //   email: contact?.email || "",
-  //   location: contact?.location || "",
+  useEffect(()=>{    
+    setContactData({
+    heading: contact?.heading || "",
+    email: contact?.email || "",
+    location: contact?.location || "",
 
-  //   social: Array.isArray(contact?.social)
-  //     ? contact.social.map((item) => ({
-  //         platform: item.platform || "github",
-  //         url: item.url || "",
-  //       }))
-  //     : [],
-  // })
-  // },[contact])
+    social: Array.isArray(contact?.Social)
+      ? contact.Social.map((item) => ({
+          platform: item.platform || "github",
+          url: item.url || "",
+        }))
+      : [],
+  })
+  },[loaded])
+  
 
   const [openPicker, setOpenPicker] = useState(null);
 
