@@ -45,11 +45,11 @@ const useHeroForm = ({ profile, loaded }) => {
       yearsSub: profile?.yearsSub || "",
       availability: profile?.availability || "",
     });
-    setImagePreview(profile?.avatar.imgUrl);
+    setImagePreview(profile?.avatar?.imgUrl);
   }, [loaded]);
 
   const [imagePreview, setImagePreview] = useState(
-    profile?.avatar.imgUrl || "",
+    profile?.avatar?.imgUrl || "",
   );
 
   const [selectedImageFile, setSelectedImageFile] = useState(null);
