@@ -193,7 +193,7 @@ export default function FeaturedProjects({ editMode }) {
             <p className="font-display font-bold text-lg leading-tight">
               {signature?.mainHeading}
               <br />
-              <span className="text-ink-950/90">{signature.body}</span>
+              <span className="text-ink-950/90">{signature?.body}</span>
             </p>
           </div>
           <div>
