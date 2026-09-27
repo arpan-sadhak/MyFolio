@@ -386,14 +386,14 @@ export default function Hero({ editMode = false }) {
           <div className="absolute inset-0 -z-10 rounded-full bg-brand-500/20 blur-3xl scale-110 animate-pulse-slow" />
           <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-full border-4 border-brand-500/30 p-2 animate-float">
             <div className="w-full h-full rounded-full overflow-hidden bg-ink-800 flex items-center justify-center">
-              {avatar.imgUrl ? (
+              {avatar?.imgUrl ? (
                 <img
-                  src={avatar.imgUrl}
+                  src={avatar?.imgUrl}
                   alt={name}
                   className="w-full h-full object-cover"
                   style={{
-                    objectPosition: `${avatar.avatarPositionX}% ${avatar.avatarPositionY}%`,
-                    transform: `scale(${avatar.avatarScale})`,
+                    objectPosition: `${avatar?.avatarPositionX}% ${avatar?.avatarPositionY}%`,
+                    transform: `scale(${avatar?.avatarScale})`,
                     transformOrigin: "center center",
                   }}
                   onError={(e) => {
