@@ -1,7 +1,9 @@
+
+
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const apiUrl = import.meta.env.API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: `${apiUrl}/api`,
