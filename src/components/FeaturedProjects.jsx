@@ -191,16 +191,16 @@ export default function FeaturedProjects({ editMode }) {
           <TrendingUp className="absolute right-4 top-4 opacity-20" size={80} />
           <div>
             <p className="font-display font-bold text-lg leading-tight">
-              {signature.mainHeading}
+              {signature?.mainHeading}
               <br />
               <span className="text-ink-950/90">{signature.body}</span>
             </p>
           </div>
           <div>
             <p className="text-sm text-white/80 mb-2">
-              {signature.paragraph}
+              {signature?.paragraph}
             </p>
-            <p className="signature-font text-2xl text-white">{signature.sign}</p>
+            <p className="signature-font text-2xl text-white">{signature?.sign}</p>
           </div>
         </div>
       </div>
