@@ -20,6 +20,5 @@ export const dataSlice = createSlice({
   },
 });
 
-// export const { } = aboutMeSlice.actions;
 
 export default dataSlice.reducer;
