@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../service/api";
 
-const useFooterForm = ({ name, loaded }) => {
+const useFooterForm = ({ name, copyright, loaded }) => {
+
+  const id = useSelector(state=>state.data.data?._id);
+  const dispatch = useDispatch();
+
   const [footerData, setFooterData] = useState({
     name: name || "",
-    copyright: "Built with React & Tailwind CSS.",
+    copyright: copyright || '',
   });
+
   useEffect(() => {
     setFooterData({
       name: name || "",
-      copyright: "Built with React & Tailwind CSS.",
+      copyright: copyright || "Built with React & Tailwind CSS.",
     });
   }, [loaded]);
 
@@ -21,7 +27,7 @@ const useFooterForm = ({ name, loaded }) => {
   };
 
   const handleSave = () => {
-    console.log("FOOTER DATA:", footerData);
+    dispatch(updateData({id, body : {name :footerData.name,  copyright : footerData.copyright}}))
   };
 
   return {

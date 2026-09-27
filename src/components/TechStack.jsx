@@ -223,7 +223,7 @@ function CustomTechnologyEditor({
 
         <input
           type="text"
-          value={item.name}
+          value={item?.name}
           onChange={(e) => onNameChange(e.target.value)}
           placeholder="e.g. OpenAI"
           className="w-full px-3 py-2.5 rounded-xl bg-paper-100 dark:bg-white/5 border border-paper-200 dark:border-white/10 text-sm text-ink-950 dark:text-white placeholder:text-ink-900/30 outline-none focus:border-brand-500"
@@ -243,7 +243,7 @@ function CustomTechnologyEditor({
           {/* PREVIEW */}
 
           <div className="w-14 h-14 shrink-0 rounded-xl bg-paper-100 dark:bg-white/5 border border-paper-200 dark:border-white/10 flex items-center justify-center overflow-hidden">
-            {item.icon ? (
+            {item?.icon ? (
               <img
                 src={item.icon}
                 alt={item.name || "Technology"}
@@ -263,7 +263,7 @@ function CustomTechnologyEditor({
             <div className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-paper-200 dark:border-white/10 py-3 px-2 text-xs text-ink-900/50 dark:text-white/50 hover:border-brand-500 hover:text-brand-500 transition-colors cursor-pointer">
               <Upload size={15} />
 
-              {item.icon ? "Change Image" : "Choose Image"}
+              {item?.icon ? "Change Image" : "Choose Image"}
             </div>
 
             <input
@@ -313,13 +313,10 @@ function CustomTechnologyEditor({
   );
 }
 
-function Skeleton(){
-  return (<section className="mt-10"> <div className="rounded-3xl border border-paper-200 dark:border-white/5 bg-paper-50 dark:bg-ink-900/60 p-6"> <p className="font-mono text-xs tracking-[0.2em] text-ink-900/50 dark:text-paper-100/40 uppercase mb-4"> Tech Stack </p> <div className="flex flex-wrap gap-3"> {Array.from({ length: 8 }).map((_, index) => ( <div key={index} className="skeleton-shimmer h-10 w-24 rounded-xl" /> ))} </div> </div> </section>)
-}
+
 
 export default function TechStack({  editMode = false }) {
   const stack = useSelector((state) => state.data?.data?.techStack);
-    const loading = useSelector((state)=>state.data?.loading);
       const loaded = useSelector((state) => state.data.loaded);
   
   
@@ -333,14 +330,13 @@ export default function TechStack({  editMode = false }) {
     updateCustomName,
     createCustom,
     selectDevicon,
+    setCustomEditor,
     openPicker,
+    setOpenPicker,
     techItems,
     customEditor,
   } = useTechStackForm({ stack: stack, loaded});
 
-  if(loading){
-    return  (<Skeleton/>)
-  }
 
   return editMode ? (
     loaded && 
@@ -469,8 +465,8 @@ export default function TechStack({  editMode = false }) {
           Tech Stack
         </p>
         <div className="flex flex-wrap gap-3">
-          {stack?.map((tech) => (
-            <div key={tech.name} title={tech.name}>
+          {stack?.map((tech, i) => (
+            <div key={i} title={tech.name}>
               <TechBadge icon={tech.icon} name={tech.name} />
             </div>
           ))}

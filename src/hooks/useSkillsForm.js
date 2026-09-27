@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../service/api";
 
 const useSkillsForm = ({ skills, loaded }) => {
 
+  const id =useSelector(state=>state.data.data?._id)
   const dispatch = useDispatch();
 
   const [skillItems, setSkillItems] = useState(
@@ -77,7 +79,7 @@ const useSkillsForm = ({ skills, loaded }) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    dispatch();
+    dispatch(updateData({id, body :{skills:skillItems}}));
   };
 
   return {

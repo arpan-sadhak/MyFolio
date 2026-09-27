@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../service/api";
 
-const useContactForm = ({contact, loaded}) => {
-    
-    const dispatch = useDispatch();
+const useContactForm = ({ contact, loaded }) => {
+  const id = useSelector((state) => state.data?.data?._id);
+   const message = useSelector(state=>state.data.data.message)
+
+  const dispatch = useDispatch();
 
   const [status, setStatus] = useState("idle");
 
@@ -12,7 +15,7 @@ const useContactForm = ({contact, loaded}) => {
     email: contact?.email || "",
     location: contact?.location || "",
 
-    social: Array.isArray(contact?.Social)
+    Social: Array.isArray(contact?.Social)
       ? contact.Social.map((item) => ({
           platform: item.platform || "github",
           url: item.url || "",
@@ -20,21 +23,20 @@ const useContactForm = ({contact, loaded}) => {
       : [],
   }));
 
-  useEffect(()=>{    
+  useEffect(() => {
     setContactData({
-    heading: contact?.heading || "",
-    email: contact?.email || "",
-    location: contact?.location || "",
+      heading: contact?.heading || "",
+      email: contact?.email || "",
+      location: contact?.location || "",
 
-    social: Array.isArray(contact?.Social)
-      ? contact.Social.map((item) => ({
-          platform: item.platform || "github",
-          url: item.url || "",
-        }))
-      : [],
-  })
-  },[loaded])
-  
+      Social: Array.isArray(contact?.Social)
+        ? contact.Social.map((item) => ({
+            platform: item.platform || "github",
+            url: item.url || "",
+          }))
+        : [],
+    });
+  }, [loaded]);
 
   const [openPicker, setOpenPicker] = useState(null);
 
@@ -47,16 +49,16 @@ const useContactForm = ({contact, loaded}) => {
 
   const handleSocialChange = (index, field, value) => {
     setContactData((prev) => {
-      const social = [...prev.social];
+      const Social = [...prev.Social];
 
-      social[index] = {
-        ...social[index],
+      Social[index] = {
+        ...Social[index],
         [field]: value,
       };
 
       return {
         ...prev,
-        social,
+        Social,
       };
     });
   };
@@ -65,8 +67,8 @@ const useContactForm = ({contact, loaded}) => {
     setContactData((prev) => ({
       ...prev,
 
-      social: [
-        ...prev.social,
+      Social: [
+        ...prev.Social,
         {
           platform: "github",
           url: "",
@@ -74,14 +76,14 @@ const useContactForm = ({contact, loaded}) => {
       ],
     }));
 
-    setOpenPicker(contactData.social.length);
+    setOpenPicker(contactData.Social.length);
   };
 
   const handleDeleteSocial = (index) => {
     setContactData((prev) => ({
       ...prev,
 
-      social: prev.social.filter((_, i) => i !== index),
+      Social: prev.Social.filter((_, i) => i !== index),
     }));
 
     setOpenPicker(null);
@@ -89,20 +91,14 @@ const useContactForm = ({contact, loaded}) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    dispatch()
+    dispatch(updateData({ id, body: { contact: contactData } }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    setStatus("sent");
-    console.log(contactData);
-    
-
-    setTimeout(() => {
-      setStatus("idle");
-    }, 3000);
-
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    dispatch(updateData({id, body:{ message : [...message, data] }}));
     e.target.reset();
   };
 

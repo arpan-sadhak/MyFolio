@@ -1,7 +1,9 @@
 import {  useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../service/api";
 
 const useAboutForm = ({ about, loaded }) => {
+  const id = useSelector(state=>state.data?.data?._id);
 
   const dispatch = useDispatch();
   
@@ -76,8 +78,8 @@ const useAboutForm = ({ about, loaded }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch();
+    e.preventDefault();        
+    dispatch(updateData({id, body:formData}));
   };
 
   return {

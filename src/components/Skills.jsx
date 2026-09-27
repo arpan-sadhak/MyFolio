@@ -3,27 +3,7 @@ import useSkillsForm from "../hooks/useSkillsForm";
 import {  useSelector } from "react-redux";
 
 
-const SkillsSkeleton = ({ count = 6 }) => {
-  return (
-    <div className="grid sm:grid-cols-2 gap-x-8 gap-y-5">
-      {" "}
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index}>
-          {" "}
-          <div className="flex items-center justify-between mb-1.5">
-            {" "}
-            <div className="skeleton-shimmer h-4 w-24 rounded" />{" "}
-            <div className="skeleton-shimmer h-3 w-8 rounded" />{" "}
-          </div>{" "}
-          <div className="h-2 rounded-full bg-paper-100 dark:bg-white/5 overflow-hidden">
-            {" "}
-            <div className="skeleton-shimmer h-full w-full rounded-full" />{" "}
-          </div>{" "}
-        </div>
-      ))}{" "}
-    </div>
-  );
-};
+
 
 export default function Skills({ editMode = false }) {
   const skills = useSelector((state) => state.data?.data?.skills);
@@ -32,10 +12,6 @@ const loading = useSelector((state) => state.data.loading);
 
   const { skillItems, handleChange, handleAdd, handleDelete, handleSave } =
     useSkillsForm({ skills: skills, loaded });
-
-  if (loading) {
-    return <SkillsSkeleton />;
-  }
 
   return editMode ? (
     loaded && 

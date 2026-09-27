@@ -235,60 +235,7 @@ function SocialPicker({ value, onChange, onClose }) {
   );
 }
 
-const ContactSkeleton = () => {
-  return (
-    <section id="contact" className="mt-10 mb-16 scroll-mt-24">
-      {/* Section title */}
-      <div className="skeleton-shimmer h-3 w-20 rounded mb-5" />
 
-      <div className="grid lg:grid-cols-[1fr_1.3fr] gap-6">
-        {/* Contact information skeleton */}
-        <div className="rounded-3xl bg-brand-600 p-6 sm:p-8 flex flex-col justify-between min-h-[300px]">
-          <div>
-            {/* Heading */}
-            <div className="space-y-2">
-              <div className="skeleton-shimmer h-7 w-[85%] rounded" />
-              <div className="skeleton-shimmer h-7 w-[60%] rounded" />
-            </div>
-
-            {/* Email + Location */}
-            <div className="space-y-4 mt-7">
-              <div className="flex items-center gap-3">
-                <div className="skeleton-shimmer h-4 w-4 rounded-full" />
-                <div className="skeleton-shimmer h-3 w-40 rounded" />
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="skeleton-shimmer h-4 w-4 rounded-full" />
-                <div className="skeleton-shimmer h-3 w-32 rounded" />
-              </div>
-            </div>
-          </div>
-
-          {/* Social icons */}
-          <div className="flex items-center gap-3 mt-8">
-            <div className="skeleton-shimmer w-9 h-9 rounded-full" />
-            <div className="skeleton-shimmer w-9 h-9 rounded-full" />
-          </div>
-        </div>
-
-        {/* Keep form visible because it is interactive */}
-        <form className="rounded-3xl border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 p-6 sm:p-8 space-y-4">
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="skeleton-shimmer w-full h-[46px] rounded-xl" />
-            <div className="skeleton-shimmer w-full h-[46px] rounded-xl" />
-          </div>
-
-          <div className="skeleton-shimmer w-full h-[46px] rounded-xl" />
-
-          <div className="skeleton-shimmer w-full h-[116px] rounded-xl" />
-
-          <div className="skeleton-shimmer w-full h-[50px] rounded-xl" />
-        </form>
-      </div>
-    </section>
-  );
-};
 
 const ICON = (name) => () => {
   return `<${name}Icon />`
@@ -315,9 +262,6 @@ const loading = useSelector((state) => state.data.loading);
     status,
   } = useContactForm({ contact: contact, loaded });
 
-  if (loading) {
-    return <ContactSkeleton />;
-  }
   
 
   return editMode ? (
@@ -387,7 +331,7 @@ const loading = useSelector((state) => state.data.loading);
 
           <div className="mt-8">
             <div className="space-y-3">
-              {contactData.social.map((item, index) => {
+              {contactData.Social.map((item, index) => {
                 const Icon = SOCIAL_ICONS[item.platform] || Globe;
 
                 return (
@@ -581,38 +525,44 @@ const loading = useSelector((state) => state.data.loading);
             <input
               required
               type="text"
+              name="name"
               placeholder="Your name"
               className="w-full px-4 py-3 rounded-xl bg-paper-100 dark:bg-white/5 border border-transparent focus:border-brand-500 outline-none text-sm text-ink-950 dark:text-white placeholder:text-ink-900/40 dark:placeholder:text-paper-100/30"
             />
+
             <input
               required
               type="email"
+              name="email"
               placeholder="Your email"
               className="w-full px-4 py-3 rounded-xl bg-paper-100 dark:bg-white/5 border border-transparent focus:border-brand-500 outline-none text-sm text-ink-950 dark:text-white placeholder:text-ink-900/40 dark:placeholder:text-paper-100/30"
             />
           </div>
+
           <input
             required
             type="text"
+            name="subject"
             placeholder="Subject"
             className="w-full px-4 py-3 rounded-xl bg-paper-100 dark:bg-white/5 border border-transparent focus:border-brand-500 outline-none text-sm text-ink-950 dark:text-white placeholder:text-ink-900/40 dark:placeholder:text-paper-100/30"
           />
+
           <textarea
             required
+            name="message"
             rows={4}
             placeholder="Your message"
             className="w-full px-4 py-3 rounded-xl bg-paper-100 dark:bg-white/5 border border-transparent focus:border-brand-500 outline-none text-sm text-ink-950 dark:text-white placeholder:text-ink-900/40 dark:placeholder:text-paper-100/30 resize-none"
           />
+
           <button
             type="submit"
             className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition-colors"
           >
             <Send size={16} />
-            {status === "sent" ? "Message noted locally ✓" : "Send Message"}
+
+            {status === "sent" ? "Message sent!" : "Send Message"}
           </button>
-          {/* <p className="text-xs text-ink-900/40 dark:text-paper-100/30 text-center">
-            Form isn't wired to a backend yet — hook it up to your API's /contact route.
-          </p> */}
         </form>
       </div>
     </section>

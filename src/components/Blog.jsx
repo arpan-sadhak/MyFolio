@@ -7,40 +7,10 @@ import { useSelector } from 'react-redux';
 export default function Blog({ editMode = false }) {
 
   const posts = useSelector((state) => state.data?.data?.blog);
-const loading = useSelector((state) => state.data.loading);
   const loaded = useSelector((state) => state.data.loaded);
 
   const { blogPosts, handleChange, handleDelete, handleAdd, handleSave } =
     useBlogForm({ posts, loaded });
-
-  if (loading) {
-    return (
-      <section id="blog" className="mt-10 scroll-mt-24">
-        <p className="font-mono text-xs tracking-[0.2em] text-ink-900/50 dark:text-paper-100/40 uppercase mb-5">
-          Blog
-        </p>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {Array.from({ length: 2 }).map((_, index) => (
-          <div key={index} className="rounded-2xl border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 p-5 flex flex-col justify-between">
-            <div>
-              <div className="h-5 w-3/4 rounded skeleton-shimmer mb-3" />
-
-              <div className="space-y-2">
-                <div className="h-3 w-full rounded skeleton-shimmer" />
-                <div className="h-3 w-5/6 rounded skeleton-shimmer" />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between mt-4">
-              <div className="h-3 w-12 rounded skeleton-shimmer" />
-
-              <div className="h-4 w-4 rounded skeleton-shimmer" />
-            </div>
-          </div>))}
-        </div>
-      </section>
-    );
-  }
   
   return editMode ? (
     loaded &&

@@ -6,7 +6,7 @@ export const extraReducers = (fetch) => (builder) => {
 
     })
     .addCase(fetch.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.data = {...state.data, ...action.payload};
       state.loading = false;
       state.loaded = true;
     })

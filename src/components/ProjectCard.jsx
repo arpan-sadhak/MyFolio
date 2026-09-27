@@ -1,81 +1,62 @@
-import { useState } from "react";
-import {
-  ArrowUpRight,
-  Plus,
-  Trash2,
-  X,
-} from "lucide-react";
-
-
-
-
-export const ProjectCardSkeleton = () => {
-  return (
-    <div className="rounded-2xl overflow-hidden border border-paper-200 dark:border-white/5 bg-white dark:bg-ink-900 flex flex-col">
-      {/* Image */}
-      <div className="aspect-[4/3] relative overflow-hidden">
-        <div className="skeleton-shimmer w-full h-full" />
-      </div>
-
-      {/* Content */}
-      <div className="p-5 flex flex-col flex-1">
-        {/* Title */}
-        <div className="skeleton-shimmer h-5 w-3/5 rounded" />
-
-        {/* Description */}
-        <div className="mt-3 space-y-2 flex-1">
-          <div className="skeleton-shimmer h-3 w-full rounded" />
-          <div className="skeleton-shimmer h-3 w-[90%] rounded" />
-          <div className="skeleton-shimmer h-3 w-[70%] rounded" />
-        </div>
-
-        {/* Tags + Button */}
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-1.5">
-            <div className="skeleton-shimmer h-6 w-14 rounded-full" />
-            <div className="skeleton-shimmer h-6 w-16 rounded-full" />
-            <div className="skeleton-shimmer h-6 w-12 rounded-full" />
-          </div>
-
-          {/* Action button */}
-          <div className="skeleton-shimmer w-8 h-8 shrink-0 rounded-full" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, Plus, Trash2, X, Camera } from "lucide-react";
+import { uploadImage } from "../service/api";
 
 export default function ProjectCard({
-
   project,
   onChange,
   onDelete,
-  editMode = false }) {
-
-    const safeProject = {
+  editMode = false,
+}) {
+  const [safeProject, setSafeproject] = useState({
     id: project?._id ?? "",
     title: project?.title ?? "",
     description: project?.description ?? "",
     image: project?.image ?? "",
-    githunUrl: project?.githunUrl ?? "",
+    githubUrl: project?.githubUrl ?? "",
     liveUrl: project?.liveUrl ?? "",
-    tags: Array.isArray(project?.tags)
-      ? project.tags
-      : [],
+    tags: Array.isArray(project?.tags) ? project.tags : [],
+  });
+  useEffect(() => {
+    setSafeproject({
+      id: project?.id ?? "",
+      title: project?.title ?? "",
+      description: project?.description ?? "",
+      image: project?.image ?? "",
+      githubUrl: project?.githubUrl ?? "",
+      liveUrl: project?.liveUrl ?? "",
+      tags: Array.isArray(project?.tags) ? project.tags : [],
+    });
+
+  }, [project]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      const image = await uploadImage(file);
+      console.log(safeProject);
+      
+      setSafeproject((prev) => ({
+        ...prev,
+        image,
+      }));
+      onChange("image", image);
+      image && setUploading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
-  
 
+  const [tagInput, setTagInput] = useState("");
 
-  const [tagInput, setTagInput] =
-    useState("");
-
-  const handleChange = (
-    field,
-    value
-  ) => {
+  const handleChange = (field, value) => {
     if (!onChange) return;
-
     onChange(field, value);
   };
 
@@ -93,10 +74,7 @@ export default function ProjectCard({
       return;
     }
 
-    handleChange("tags", [
-      ...safeProject.tags,
-      tag,
-    ]);
+    handleChange("tags", [...safeProject.tags, tag]);
 
     setTagInput("");
   };
@@ -104,9 +82,7 @@ export default function ProjectCard({
   const handleRemoveTag = (tagToRemove) => {
     handleChange(
       "tags",
-      safeProject.tags.filter(
-        (tag) => tag !== tagToRemove
-      )
+      safeProject.tags.filter((tag) => tag !== tagToRemove),
     );
   };
   const handleTagKeyDown = (e) => {
@@ -121,23 +97,49 @@ export default function ProjectCard({
       {/* =====================================================
           IMAGE
       ====================================================== */}
-
-      <div className="aspect-[4/3] bg-gradient-to-br from-brand-500/20 to-ink-800 relative overflow-hidden">
-        {safeProject.image ? (
-          <img
-            src={safeProject.image}
-            alt={safeProject.title}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-            }}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-xs text-white/30">Project image preview</p>
+      {uploading ? (
+        <div className="aspect-[4/3] bg-gradient-to-br from-brand-500/20 to-ink-800 relative overflow-hidden">
+          <div className="flex flex-row gap-2 absolute inset-0 items-center justify-center">
+            <div className="w-4 h-4 rounded-full bg-green-400 animate-bounce [animation-delay:.7s]"></div>
+            <div className="w-4 h-4 rounded-full bg-green-200 animate-bounce [animation-delay:.3s]"></div>
+            <div className="w-4 h-4 rounded-full bg-green-400 animate-bounce [animation-delay:.7s]"></div>
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="aspect-[4/3] bg-gradient-to-br from-brand-500/20 to-ink-800 relative overflow-hidden">
+          {safeProject.image ? (
+            <img
+              src={safeProject.image}
+              alt={safeProject.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className="text-xs text-white/30">{safeProject.title}</p>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            title="Change profile image"
+            className="absolute z-50 bottom-2 right-2 sm:bottom-3 sm:right-3 w-10 h-10 rounded-full bg-transparent hover:text-white text-black flex items-center justify-center shadow-lg border-2 hover:border-white border-ink-900 transition-all hover:scale-105"
+          >
+            <Camera size={18} />
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </div>
+      )}
 
       {/* =====================================================
           CONTENT
@@ -174,9 +176,9 @@ export default function ProjectCard({
 
         <input
           type="url"
-          value={safeProject.image}
-          onChange={(e) => handleChange("image", e.target.value)}
-          placeholder="Project image URL"
+          value={safeProject.liveUrl}
+          onChange={(e) => handleChange("liveUrl", e.target.value)}
+          placeholder="Live URL"
           className="mt-3 w-full px-3 py-2 rounded-lg bg-paper-100 dark:bg-white/5 border border-transparent focus:border-brand-500 outline-none text-xs text-ink-950 dark:text-white placeholder:text-ink-900/30 dark:placeholder:text-white/30"
         />
 
@@ -186,8 +188,8 @@ export default function ProjectCard({
 
         <input
           type="url"
-          value={safeProject.link}
-          onChange={(e) => handleChange("link", e.target.value)}
+          value={safeProject.githubUrl}
+          onChange={(e) => handleChange("githubUrl", e.target.value)}
           placeholder="Project URL"
           className="mt-2 w-full px-3 py-2 rounded-lg bg-paper-100 dark:bg-white/5 border border-transparent focus:border-brand-500 outline-none text-xs text-ink-950 dark:text-white placeholder:text-ink-900/30 dark:placeholder:text-white/30"
         />
@@ -251,11 +253,9 @@ export default function ProjectCard({
         ==================================================== */}
 
         <div className="mt-4 flex items-center justify-between">
-          {/* PREVIEW */}
-
-          {safeProject.link ? (
+          {/* {safeProject.githunUrl ? (
             <a
-              href={safeProject.link}
+              href={safeProject.githunUrl}
               target="_blank"
               rel="noreferrer"
               className="w-8 h-8 rounded-full flex items-center justify-center bg-brand-600 text-white hover:bg-brand-700 transition-colors"
@@ -265,7 +265,7 @@ export default function ProjectCard({
             </a>
           ) : (
             <span />
-          )}
+          )} */}
 
           {/* DELETE */}
 
@@ -297,9 +297,12 @@ export default function ProjectCard({
         ) : null}
       </div>
       <div className="p-5 flex flex-col flex-1">
-        <h3 className="font-display font-bold text-ink-950 dark:text-white">
+        <a href={project.githubUrl}>
+        <h3 className="font-display font-bold text-ink-950 dark:text-white hover:text-green-600 dark:hover:text-green-600 ">
           {project.title}
+          <span className="ml-2"><ArrowUpRight size={15} className="inline-block " /></span>
         </h3>
+        </a>
         <p className="mt-2 text-sm text-ink-900/50 dark:text-paper-100/45 flex-1">
           {project.description}
         </p>
@@ -315,7 +318,7 @@ export default function ProjectCard({
             ))}
           </div>
           <a
-            href={project.link}
+            href={project.liveUrl}
             className="w-8 h-8 shrink-0 rounded-full flex items-center justify-center bg-brand-600 text-white hover:bg-brand-700 transition-colors"
             aria-label={`View ${project.title}`}
           >

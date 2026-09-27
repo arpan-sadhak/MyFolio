@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../service/api";
 
-const useBlogForm = ({ posts, loaded}) => {
+const useBlogForm = ({ posts, loaded }) => {
+  const id = useSelector((state) => state.data.data._id);
   const dispatch = useDispatch();
   const [blogPosts, setBlogPosts] = useState(
     Array.isArray(posts)
@@ -60,7 +62,7 @@ const useBlogForm = ({ posts, loaded}) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    dispatch();
+    dispatch(updateData({ id, body: { blog: blogPosts } }));
   };
 
   return {

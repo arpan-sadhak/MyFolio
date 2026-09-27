@@ -1,53 +1,16 @@
-import ProjectCard, { ProjectCardSkeleton } from "./ProjectCard";
+import ProjectCard from "./ProjectCard";
 import { ArrowUpRight, TrendingUp, Plus, Trash2 } from "lucide-react";
 import useFeatureProject from "../hooks/useFeaturedProject";
 import { useSelector } from 'react-redux';
 
 
-const ProjectsSkeleton = () => {
-  return (
-    <section id="projects" className="mt-10 scroll-mt-24">
-      {/* Header */}
-      <div className="flex items-end justify-between mb-5">
-        <div className="skeleton-shimmer h-3 w-28 rounded" />
 
-        <div className="skeleton-shimmer h-4 w-32 rounded" />
-      </div>
-
-      <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {/* Project skeletons */}
-        {Array.from({ length: 3 }).map((_, index) => (
-          <ProjectCardSkeleton key={index} />
-        ))}
-
-        {/* Signature / CTA skeleton */}
-        <div className="rounded-2xl bg-brand-600 p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden">
-          {/* Icon */}
-          <div className="absolute right-4 top-4 skeleton-shimmer w-20 h-20 rounded-full opacity-30" />
-
-          {/* Heading */}
-          <div className="space-y-2">
-            <div className="skeleton-shimmer h-5 w-40 rounded" />
-            <div className="skeleton-shimmer h-5 w-32 rounded" />
-          </div>
-
-          {/* Bottom content */}
-          <div>
-            <div className="skeleton-shimmer h-3 w-52 rounded mb-4" />
-            <div className="skeleton-shimmer h-7 w-32 rounded" />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
 
 
 export default function FeaturedProjects({ editMode }) {
 
   const projects = useSelector(state => state.data?.data?.project);
   const signature = useSelector((state) => state.data?.data?.signature);
-const loading = useSelector((state) => state.data.loading);
   const loaded = useSelector((state) => state.data.loaded);
 
   
@@ -55,17 +18,13 @@ const loading = useSelector((state) => state.data.loading);
   const {
     projectItems,
     signatureValue,
-    setSignatureValue,
+    handleSignatureChange,
     handleProjectChange,
     handleDeleteProject,
     handleAddProject,
     handleSave,
-  } = useFeatureProject({projects:projects, signature:signature?.sign, loaded});
-  
+  } = useFeatureProject({projects:projects, signature, loaded});
 
-  if (loading){
-    return (<ProjectsSkeleton/>)
-  }
 
   return editMode ? (
     loaded && 
@@ -134,24 +93,41 @@ const loading = useSelector((state) => state.data.loading);
           {/* TITLE */}
 
           <div>
-            <p className="font-display font-bold text-lg leading-tight">
-              Turning ideas into
+            <input 
+              className="w-full bg-transparent border-none outline-none p-0 resize-none placeholder:text-white/80 text-white  font-display font-bold text-lg leading-tight"
+              type="text"
+              value={signatureValue.mainHeading}
+              onChange={(e) => handleSignatureChange("mainHeading", e.target.value)}
+              placeholder="Your mainHeading"
+             />
               <br />
-              <span className="text-ink-950/90">Digital Reality</span>
-            </p>
+              <textarea 
+                className= "bg-transparent border-none outline-none p-0 resize-none placeholder:text-white/80  text-ink-950/90 font-display font-bold text-lg leading-tight"
+                type="text"
+                value={signatureValue.body}
+                onChange={(e) => handleSignatureChange("body",e.target.value)}
+                rows={5}
+                placeholder="Your body"
+               />
+
           </div>
 
           {/* SIGNATURE */}
 
           <div>
-            <p className="text-sm text-white/80 mb-2">
-              Let's build something amazing together!
-            </p>
+            <textarea
+              className="block w-full mt-2 bg-transparent border-none outline-none p-0 resize-none placeholder:text-white/80 mb-2 text-ink-900/50 max-w-md text-sm text-white "
+              type="text"
+              value = {signatureValue.paragraph}
+              onChange={(e) => handleSignatureChange("paragraph", e.target.value)}
+              rows={5}
+              placeholder="Your paragraph"
+              />
 
             <input
               type="text"
-              value={signatureValue}
-              onChange={(e) => setSignatureValue(e.target.value)}
+              value={signatureValue.sign}
+              onChange={(e) => handleSignatureChange("sign", e.target.value)}
               placeholder="Your signature"
               className="signature-font text-2xl text-white bg-transparent border-none outline-none w-full placeholder:text-white/40"
             />
@@ -215,16 +191,16 @@ const loading = useSelector((state) => state.data.loading);
           <TrendingUp className="absolute right-4 top-4 opacity-20" size={80} />
           <div>
             <p className="font-display font-bold text-lg leading-tight">
-              Turning ideas into
+              {signature.mainHeading}
               <br />
-              <span className="text-ink-950/90">Digital Reality</span>
+              <span className="text-ink-950/90">{signature.body}</span>
             </p>
           </div>
           <div>
             <p className="text-sm text-white/80 mb-2">
-              Let's build something amazing together!
+              {signature.paragraph}
             </p>
-            <p className="signature-font text-2xl text-white">{signatureValue}</p>
+            <p className="signature-font text-2xl text-white">{signature.sign}</p>
           </div>
         </div>
       </div>

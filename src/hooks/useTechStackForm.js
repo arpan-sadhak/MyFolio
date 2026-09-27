@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../service/api";
 
 const useTechStackForm = ({ stack, loaded }) => {
 
+  const id = useSelector(state=>state.data.data?._id)
   const dispatch = useDispatch();
 
   const [techItems, setTechItems] = useState(
     Array.isArray(stack)
       ? stack.map((tech) => ({
-          id: tech.id ?? crypto.randomUUID(),
+          id: tech?._id,
 
           name: tech.name ?? "",
 
@@ -22,7 +24,7 @@ const useTechStackForm = ({ stack, loaded }) => {
   useEffect(()=>{
     setTechItems(Array.isArray(stack)
       ? stack.map((tech) => ({
-          id: tech.id ?? crypto.randomUUID(),
+          id: tech?._id,
 
           name: tech.name ?? "",
 
@@ -148,7 +150,7 @@ const useTechStackForm = ({ stack, loaded }) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    dispatch();
+    dispatch(updateData({id, body : {techStack : techItems}}));
   };
 
   return {
@@ -157,7 +159,9 @@ const useTechStackForm = ({ stack, loaded }) => {
     handleAdd,
     finishCustom,
     updateCustomImage,
+    setOpenPicker,
     updateCustomName,
+    setCustomEditor,
     createCustom,
     selectDevicon,
     customEditor,

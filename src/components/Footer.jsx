@@ -4,20 +4,13 @@ import useFooterForm from "../hooks/useFooterForm";
 import { useSelector } from 'react-redux';
 
 
-const FooterSkeleton = () => {
-  return (
-    <footer className="pb-8 pt-2 flex justify-center">
-      <div className="skeleton-shimmer h-3 w-64 rounded" />
-    </footer>
-  );
-};
+
 
 
 
 export default function Footer({ editMode = false}) {
-   const firstName = useSelector((state) => state.data?.data?.firstName);
-   const lastName = useSelector((state) => state.data?.data?.lastName);
-const loading = useSelector((state) => state.data.loading);
+   const name = useSelector((state) => state.data?.data?.name);
+   const copyright = useSelector((state) => state.data?.data?.copyright);
   const loaded = useSelector((state) => state.data.loaded);
 
 
@@ -27,11 +20,7 @@ const loading = useSelector((state) => state.data.loading);
     handleSave,
     handleChange,
     footerData,
-  } = useFooterForm({name:`${firstName} ${lastName}`, loaded})
-
-  if(loading ){
-    return (<FooterSkeleton/>)
-  }
+  } = useFooterForm({name, copyright, loaded})
 
   return editMode ? (
     loaded &&
@@ -85,7 +74,7 @@ const loading = useSelector((state) => state.data.loading);
     </footer>
   ) : (
     <footer className="pb-8 pt-2 text-center text-xs text-ink-900/40 dark:text-paper-100/30">
-      © {new Date().getFullYear()} {firstName} {lastName}. Built with React & Tailwind CSS.
+      © {new Date().getFullYear()} {name}. {copyright}.
     </footer>
   );
 }

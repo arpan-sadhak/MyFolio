@@ -1,17 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef, useEffect } from "react";
+import { updateData, uploadImage } from "../service/api";
 
 const useHeroForm = ({ profile, loaded }) => {
+  const id = useSelector((state) => state.data.data?._id);
+  const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState(() => ({
-    id : profile?._id || '',
+    id: profile?._id || "",
     greeting: profile?.greeting || "",
     firstName: profile?.firstName || "",
     lastName: profile?.lastName || "",
     role: profile?.role || "",
     tagline: profile?.tagline || "",
-    avatar: profile?.avatar || "",
+    avatar: {
+      imgUrl: profile?.avatar?.imgUrl || "",
+      avatarPositionX: profile?.avatar?.avatarPositionX || 50,
+      avatarPositionY: profile?.avatar?.avatarPositionY || 50,
+      avatarScale: profile?.avatar?.avatarScale || 1,
+    },
     name: profile?.name || "",
 
     yearsLabel: profile?.yearsLabel || "",
@@ -21,22 +29,28 @@ const useHeroForm = ({ profile, loaded }) => {
 
   useEffect(() => {
     setFormData({
-      id : profile?._id || '',
+      id: profile?._id || "",
       greeting: profile?.greeting || "",
       firstName: profile?.firstName || "",
       lastName: profile?.lastName || "",
       role: profile?.role || "",
       tagline: profile?.tagline || "",
-      avatar: profile?.avatar || "",
+      imgUrl: profile?.avatar?.imgUrl || "",
+      avatarPositionX: profile?.avatar?.avatarPositionX || 50,
+      avatarPositionY: profile?.avatar?.avatarPositionY || 50,
+      avatarScale: profile?.avatar?.avatarScale || 1,
       name: profile?.name || "",
 
       yearsLabel: profile?.yearsLabel || "",
       yearsSub: profile?.yearsSub || "",
       availability: profile?.availability || "",
     });
+    setImagePreview(profile?.avatar.imgUrl);
   }, [loaded]);
 
-  const [imagePreview, setImagePreview] = useState(profile?.avatar || "");
+  const [imagePreview, setImagePreview] = useState(
+    profile?.avatar.imgUrl || "",
+  );
 
   const [selectedImageFile, setSelectedImageFile] = useState(null);
 
@@ -66,34 +80,24 @@ const useHeroForm = ({ profile, loaded }) => {
      IMAGE UPLOAD
   ========================================================= */
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
 
     if (!file) return;
-    setSelectedImageFile(file);
 
-    const reader = new FileReader();
+    try {
+      setUploading(true);
+      const imageUrl = await uploadImage(file);
 
-    reader.onload = () => {
-      const result = reader.result;
-
-      setImagePreview(result);
-
-      /*
-       * Reset crop whenever a new image is selected.
-       */
       setFormData((prev) => ({
         ...prev,
-        avatar: result,
-        avatarPositionX: 50,
-        avatarPositionY: 50,
-        avatarScale: 1,
+        imgUrl: imageUrl,
       }));
-    };
-
-    reader.readAsDataURL(file);
+      imageUrl && setUploading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
-
   /* =========================================================
      START IMAGE DRAG
   ========================================================= */
@@ -194,11 +198,31 @@ const useHeroForm = ({ profile, loaded }) => {
     }));
   };
 
-  const handleSubmit =  (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    
-    dispatch()
+
+    dispatch(
+      updateData({
+        id,
+        body: {
+          availability: formData.availability,
+          avatar: {
+            imgUrl: formData?.imgUrl,
+            avatarPositionX: formData.avatarPositionX,
+            avatarPositionY: formData.avatarPositionY,
+            avatarScale: formData.avatarScale,
+          },
+          firstName: formData.firstName,
+          greeting: formData.greeting,
+          lastName: formData.lastName,
+          name: formData.name,
+          role: formData.role,
+          tagline: formData.tagline,
+          yearsLabel: formData.yearsLabel,
+          yearsSub: formData.yearsSub,
+        },
+      }),
+    );
   };
 
   return {
@@ -215,6 +239,7 @@ const useHeroForm = ({ profile, loaded }) => {
     handleZoomOut,
     handleResetImage,
     handleSubmit,
+    uploading,
   };
 };
 

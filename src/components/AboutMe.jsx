@@ -7,59 +7,10 @@ import useAboutForm from "../hooks/useAboutForm";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
-const AboutSkeleton = () => {
-  return (
-    <section
-      id="about"
-      className="mt-10 scroll-mt-24 rounded-3xl border border-paper-200 dark:border-white/5 bg-paper-50 dark:bg-ink-900/60 p-6 sm:p-8"
-    >
-      <div className="grid lg:grid-cols-[1fr_1.4fr] gap-8">
-        {/* Left side */}
-        <div>
-          {/* Heading */}
-          <div className="skeleton-shimmer h-3 w-32 rounded mb-4" />
-
-          {/* Body */}
-          <div className="space-y-2">
-            <div className="skeleton-shimmer h-3 w-full rounded" />
-            <div className="skeleton-shimmer h-3 w-[95%] rounded" />
-            <div className="skeleton-shimmer h-3 w-[85%] rounded" />
-            <div className="skeleton-shimmer h-3 w-[70%] rounded" />
-          </div>
-
-          {/* Link */}
-          <div className="skeleton-shimmer h-4 w-28 rounded mt-6" />
-        </div>
-
-        {/* Right side - Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div
-              key={index}
-              className="rounded-2xl bg-white dark:bg-ink-900 border border-paper-200 dark:border-white/5 p-4 flex flex-col gap-2"
-            >
-              {/* Icon */}
-              <div className="skeleton-shimmer h-5 w-5 rounded" />
-
-              {/* Value */}
-              <div className="skeleton-shimmer h-6 w-16 rounded mt-1" />
-
-              {/* Label */}
-              <div className="skeleton-shimmer h-3 w-20 rounded" />
-              <div className="skeleton-shimmer h-3 w-14 rounded" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
 export function AboutMe({ editMode = false }) {
   const heading = useSelector((state) => state.data?.data?.heading);
   const body = useSelector((state) => state.data?.data?.body);
   const stats = useSelector((state) => state.data?.data?.stats);
-  const loading = useSelector((state) => state.data.loading);
   const loaded = useSelector((state) => state.data.loaded);
 
   const {
@@ -71,12 +22,7 @@ export function AboutMe({ editMode = false }) {
       handleDeleteStat,
       handleAddStat,
       handleSubmit,
-    } = useAboutForm({ about: { heading, body, stats }, loaded });
-
-
-  if (loading) {
-    return <AboutSkeleton />;
-  }
+    } = useAboutForm({ about: {heading, body, stats }, loaded });
 
   return editMode ? (
     loaded &&

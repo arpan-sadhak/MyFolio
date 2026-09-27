@@ -9,12 +9,15 @@ import {
   Sun,
   Moon,
   Download,
+  Upload,
   X,
 } from "lucide-react";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { useTheme } from "../context/ThemeContext";
-import { useState } from "react";
-import { useSelector } from 'react-redux';
+import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../service/api";
+import { uploadPDF } from "../service/api";
 
 const NAV_ITEMS = [
   { id: "home", label: "Home", icon: Home },
@@ -26,7 +29,6 @@ const NAV_ITEMS = [
   { id: "contact", label: "Contact", icon: Mail },
 ];
 
-
 function isValidUrl(value) {
   try {
     new URL(value);
@@ -36,19 +38,21 @@ function isValidUrl(value) {
   }
 }
 
-
 export default function Sidebar({
-  onResumeChange,
   mobileOpen,
   onCloseMobile,
   editMode = false,
 }) {
-  const resumeUrl = useSelector(state => state.data.data?.resumeUrl);
+  const id = useSelector((state) => state.data.data?._id);
+  const dispatch = useDispatch();
+  const resumeUrl = useSelector((state) => state.data.data?.resumeUrl);
   const firstName = useSelector((state) => state.data?.data?.firstName);
-   const lastName = useSelector((state) => state.data?.data?.lastName);
-  
+  const lastName = useSelector((state) => state.data?.data?.lastName);
+
   const active = useActiveSection(NAV_ITEMS.map((n) => n.id));
   const { theme, toggleTheme } = useTheme();
+
+  const fileInputRef = useRef(null);
 
   const handleNavClick = (id) => (e) => {
     e.preventDefault();
@@ -62,21 +66,45 @@ export default function Sidebar({
 
   const [resumeInput, setResumeInput] = useState(resumeUrl || "");
 
+  const [resumeFile, setResumeFile] = useState(null);
+
+  const handleResumeChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) console.log("No file selected");
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+      alert("Please select a PDF file");
+      return;
+    }
+
+    setResumeFile(file);
+  };
+
   const handleResumeClick = (e) => {
     e.preventDefault();
-
-    setResumeInput(resumeUrl || "");
-
     setShowResumePopup(true);
   };
 
-  const handleSaveResume = () => {
-    const url = resumeInput.trim();
 
-    if (!url) return;
-    onResumeChange?.(url);
+  const handleSave = async () => {
+    try {
+      let resume = resumeUrl;
 
-    setShowResumePopup(false);
+      if (resumeFile) {
+        resume = await uploadPDF(resumeFile);
+      }
+      dispatch(updateData({
+        id,
+        body: { resumeUrl: resume }
+      }));
+      setResumeFile(null);
+      alert("Saved successfully");
+    } catch (error) {
+      console.error(error);
+      alert("Save failed");
+    }
   };
 
   return editMode ? (
@@ -101,8 +129,7 @@ export default function Sidebar({
         className={`fixed top-0 left-0 h-screen w-[260px] z-40 flex flex-col
           bg-white dark:bg-ink-950 border-r border-paper-200 dark:border-brand-500/10
           transition-transform duration-300 ease-out
-          ${
-            mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           }`}
       >
         {/* ===================================================
@@ -143,11 +170,10 @@ export default function Sidebar({
                 href={`#${id}`}
                 onClick={handleNavClick(id)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors
-                    ${
-                      isActive
-                        ? "bg-brand-600 text-white shadow-glow"
-                        : "text-ink-900/60 dark:text-paper-100/60 hover:text-ink-950 dark:hover:text-white hover:bg-paper-100 dark:hover:bg-white/5"
-                    }`}
+                    ${isActive
+                    ? "bg-brand-600 text-white shadow-glow"
+                    : "text-ink-900/60 dark:text-paper-100/60 hover:text-ink-950 dark:hover:text-white hover:bg-paper-100 dark:hover:bg-white/5"
+                  }`}
               >
                 <Icon size={18} strokeWidth={2} />
                 {label}
@@ -176,11 +202,10 @@ export default function Sidebar({
             </span>
 
             <span
-              className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${
-                theme === "dark"
-                  ? "bg-brand-600 justify-end"
-                  : "bg-ink-950/20 justify-start"
-              }`}
+              className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${theme === "dark"
+                ? "bg-brand-600 justify-end"
+                : "bg-ink-950/20 justify-start"
+                }`}
             >
               <span className="w-4 h-4 rounded-full bg-white block" />
             </span>
@@ -233,27 +258,31 @@ export default function Sidebar({
             {/* Heading */}
 
             <h3 className="font-display font-bold text-lg text-ink-950 dark:text-white">
-              CV Download Link
+              C V
             </h3>
 
             <p className="mt-1.5 text-sm text-ink-900/50 dark:text-paper-100/50">
-              Paste the link to your CV below.
+              Upload your CV below.
             </p>
 
             {/* Input */}
 
             <div className="mt-5">
-              <label className="block text-xs font-medium text-ink-900/60 dark:text-paper-100/60 mb-2">
-                CV URL
-              </label>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                title="Change resume"
+                className="w-full px-3 py-2.5 flex justify-center rounded-xl border border-paper-200 dark:border-white/10 bg-paper-50 dark:bg-ink-950 text-sm text-ink-950 dark:text-white placeholder:text-ink-900/30 dark:placeholder:text-paper-100/30 outline-none focus:border-brand-500 "
+              >
+                <Upload size={38} />
+              </button>
 
               <input
-                type="url"
-                value={resumeInput}
-                onChange={(e) => setResumeInput(e.target.value)}
-                placeholder="https://example.com/cv.pdf"
-                autoFocus
-                className="w-full px-3 py-2.5 rounded-xl border border-paper-200 dark:border-white/10 bg-paper-50 dark:bg-ink-950 text-sm text-ink-950 dark:text-white placeholder:text-ink-900/30 dark:placeholder:text-paper-100/30 outline-none focus:border-brand-500"
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,application/pdf"
+                onChange={handleResumeChange}
+                className="hidden"
               />
             </div>
 
@@ -270,11 +299,11 @@ export default function Sidebar({
 
               <button
                 type="button"
-                onClick={handleSaveResume}
+                onClick={handleSave}
                 disabled={!resumeInput.trim()}
                 className="flex-1 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors"
               >
-                Save Link
+                Save
               </button>
             </div>
           </div>
@@ -325,10 +354,9 @@ export default function Sidebar({
                 href={`#${id}`}
                 onClick={handleNavClick(id)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors
-                  ${
-                    isActive
-                      ? "bg-brand-600 text-white shadow-glow"
-                      : "text-ink-900/60 dark:text-paper-100/60 hover:text-ink-950 dark:hover:text-white hover:bg-paper-100 dark:hover:bg-white/5"
+                  ${isActive
+                    ? "bg-brand-600 text-white shadow-glow"
+                    : "text-ink-900/60 dark:text-paper-100/60 hover:text-ink-950 dark:hover:text-white hover:bg-paper-100 dark:hover:bg-white/5"
                   }`}
               >
                 <Icon size={18} strokeWidth={2} />
@@ -348,30 +376,29 @@ export default function Sidebar({
               {theme === "dark" ? "Dark Mode" : "Light Mode"}
             </span>
             <span
-              className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${
-                theme === "dark"
-                  ? "bg-brand-600 justify-end"
-                  : "bg-ink-950/20 justify-start"
-              }`}
+              className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${theme === "dark"
+                ? "bg-brand-600 justify-end"
+                : "bg-ink-950/20 justify-start"
+                }`}
             >
               <span className="w-4 h-4 rounded-full bg-white block" />
             </span>
           </button>
-          {isValidUrl(resumeUrl) ?
-          <a
-            href={resumeUrl}
-            download={`${firstName}_${lastName}_CV.pdf`}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-paper-200 dark:border-white/10 text-sm font-medium text-ink-900/80 dark:text-paper-100/80 hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-white transition-colors"
-          >
-            <Download size={16} />
-            Download CV
-          </a> : <button
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-paper-200 dark:border-white/10 text-sm font-medium text-ink-900/80 dark:text-paper-100/80 hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-white transition-colors"
-          >
-            <Download size={16} />
-            Download CV
-          </button>
-          }
+          {isValidUrl(resumeUrl) ? (
+            <a
+              href={resumeUrl}
+              download={`${firstName}_${lastName}_CV.pdf`}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-paper-200 dark:border-white/10 text-sm font-medium text-ink-900/80 dark:text-paper-100/80 hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-white transition-colors"
+            >
+              <Download size={16} />
+              Download CV
+            </a>
+          ) : (
+            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-paper-200 dark:border-white/10 text-sm font-medium text-ink-900/80 dark:text-paper-100/80 hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-white transition-colors">
+              <Download size={16} />
+              Download CV
+            </button>
+          )}
         </div>
       </aside>
     </>
